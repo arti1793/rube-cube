@@ -16,7 +16,7 @@ export interface ICubeOptions {
 }
 
 /** black cube with given size */
-class Cube {
+export class Cube {
 
     public readonly shapeSize = 1000;
     // all the cubes were black from the start
