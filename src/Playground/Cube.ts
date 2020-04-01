@@ -38,7 +38,7 @@ export class Cube {
     }
 
     constructor() {
-        this.geometry = new BoxGeometry(this.shapeSize, this.shapeSize, this.shapeSize, 100, 100, 100);
+        this.geometry = new BoxGeometry(this.shapeSize, this.shapeSize, this.shapeSize, 10, 10, 10);
         this.mesh = new Mesh(this.geometry, this.materials);
     }
 }

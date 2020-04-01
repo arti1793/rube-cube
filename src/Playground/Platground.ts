@@ -1,21 +1,20 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, Color } from 'three';
+import { Scene, PerspectiveCamera, WebGLRenderer, Color, Group, AxesHelper } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { ECubeSide, CubeMultiColored } from './Cube';
 import { EColor } from './common/CommonConstants';
-import { CubeComposer } from './CubeComposerStrategies';
+import { generateCubes } from './CubeComposerStrategies';
+import { Cube } from './Cube';
 
 export class Playground {
 
     scene = new Scene();
-    camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+    camera = new PerspectiveCamera(50, window.innerWidth / window.innerHeight, 100, 100000);
     renderer = new WebGLRenderer();
 
     controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    cubeList = [
-        new CubeMultiColored(new Map([[ECubeSide.back, EColor.blue], [ECubeSide.left, EColor.red]])),
-        new CubeMultiColored(new Map([[ECubeSide.bottom, EColor.blue], [ECubeSide.top, EColor.red]])),
-    ];
+    axisHelper = new AxesHelper(5000);
+
+    cubeList: Cube[] = generateCubes(3);
     constructor(element: Element) {
         if (!element) throw new Error('please specify element to append a cube to');
 
@@ -27,7 +26,11 @@ export class Playground {
         element.appendChild(this.renderer.domElement);
 
 
-        this.scene.add(...CubeComposer(this.cubeList));
+        console.log(this.cubeList);
+        const cubeGroup = new Group();
+        cubeGroup.add(...this.cubeList.map(cube => cube.mesh));
+        this.scene.add(this.axisHelper);
+        this.scene.add(cubeGroup);
         this.scene.background = new Color(EColor.white);
 
 
