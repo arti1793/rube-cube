@@ -1,7 +1,6 @@
 import {
   AxesHelper,
   Color,
-  Fog,
   Group,
   PerspectiveCamera,
   Scene,
@@ -27,14 +26,14 @@ export class Playground {
   public axisHelper = new AxesHelper(500);
 
   public cubeList: Cube[] = generateCubes(3);
+  public cubeGroup: Group;
 
   private fpsInterval = 15;
+
+  private fps = 30;
   private lastDrawTime: number;
   private frameCount: number;
   private lastSampleTime: number;
-  private intervalID: NodeJS.Timer;
-  private requestID: number;
-
   constructor(element: Element) {
     if (!element) {
       throw new Error('please specify element to append a cube to');
@@ -51,10 +50,9 @@ export class Playground {
     cubeGroup.add(...this.cubeList.map(cube => cube.mesh));
     this.scene.add(this.axisHelper);
     this.scene.add(cubeGroup);
-    this.scene.background = new Color(EColor.blue);
-    this.scene.fog = new Fog(EColor.blue, 1400, 1500);
+    this.scene.background = new Color(EColor.white);
 
-    this.startAnimating(25);
+    this.startAnimating(this.fps);
   }
 
   public setCameraPosition = () => {
@@ -72,7 +70,7 @@ export class Playground {
 
     this.animate(window.performance.now());
 
-    this.intervalID = setInterval(this.sampleFps, sampleFreq);
+    setInterval(this.sampleFps, sampleFreq);
   };
 
   private sampleFps = () => {
@@ -91,13 +89,9 @@ export class Playground {
     this.lastSampleTime = now;
   };
 
-  private drawNextFrame = (now: number) => {
-    this.render();
-  };
-
   private animate = (now: number) => {
     // request another frame
-    this.requestID = requestAnimationFrame(this.animate);
+    requestAnimationFrame(this.animate);
 
     // calc elapsed time since last loop
     const elapsed = now - this.lastDrawTime;
@@ -109,7 +103,7 @@ export class Playground {
       this.lastDrawTime = now - (elapsed % this.fpsInterval);
 
       // draw
-      this.drawNextFrame(now);
+      this.render();
 
       this.frameCount++;
     }
@@ -118,6 +112,7 @@ export class Playground {
   private render = () => {
     // window.requestAnimationFrame(this.render);
     this.controls.update();
+
     this.renderer.render(this.scene, this.camera);
   };
 }
