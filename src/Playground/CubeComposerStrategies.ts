@@ -77,9 +77,9 @@ function coordinateCubeFactory(
   cube.data = axisEdgeMap;
 
   const centerBias = (n / 2) * cube.shapeSize - cube.shapeSize / 2;
-  cube.mesh.translateX(xIndex * (100 + cube.shapeSize) - centerBias);
-  cube.mesh.translateY(yIndex * (100 + cube.shapeSize) - centerBias);
-  cube.mesh.translateZ(zIndex * (100 + cube.shapeSize) - centerBias);
+  cube.mesh.translateX(xIndex * (10 + cube.shapeSize) - centerBias);
+  cube.mesh.translateY(yIndex * (10 + cube.shapeSize) - centerBias);
+  cube.mesh.translateZ(zIndex * (10 + cube.shapeSize) - centerBias);
 
   return cube;
 }

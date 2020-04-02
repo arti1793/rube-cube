@@ -1,6 +1,7 @@
 import {
   AxesHelper,
   Color,
+  Fog,
   Group,
   PerspectiveCamera,
   Scene,
@@ -23,7 +24,7 @@ export class Playground {
 
   public controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-  public axisHelper = new AxesHelper(5000);
+  public axisHelper = new AxesHelper(500);
 
   public cubeList: Cube[] = generateCubes(3);
   constructor(element: Element) {
@@ -42,20 +43,17 @@ export class Playground {
     cubeGroup.add(...this.cubeList.map(cube => cube.mesh));
     this.scene.add(this.axisHelper);
     this.scene.add(cubeGroup);
-    this.scene.background = new Color(EColor.white);
+    this.scene.background = new Color(EColor.blue);
+    this.scene.fog = new Fog(EColor.blue, 1000, 16000);
 
-    // this.renderer.domElement.addEventListener(
-    //   'mousemove',
-    //   this.handleMouseMove
-    // );
     this.render();
   }
 
   public setCameraPosition() {
     /** camera position */
-    this.camera.position.y = 8 * 1000;
-    this.camera.position.z = 8 * 1000;
-    this.camera.position.x = 8 * 1000;
+    this.camera.position.y = 8 * 100;
+    this.camera.position.z = 8 * 100;
+    this.camera.position.x = 8 * 100;
   }
 
   public render = () => {

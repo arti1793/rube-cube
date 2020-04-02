@@ -16,7 +16,7 @@ export interface ICubeOptions {
 
 /** black cube with given size */
 export class Cube {
-  public readonly shapeSize = 1000;
+  public readonly shapeSize = 100;
   // all the cubes were black from the start
   public materials = [
     this.getMaterial(EColor.black),
@@ -44,7 +44,7 @@ export class Cube {
   }
 
   protected getMaterial(color: EColor) {
-    return new MeshBasicMaterial({ color, wireframe: true });
+    return new MeshBasicMaterial({ color, wireframe: false });
   }
 }
 
