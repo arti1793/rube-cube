@@ -1,88 +1,64 @@
 import { Cube, ECubeSide, CubeMultiColored } from './Cube';
-import { EColor } from './common/CommonConstants';
+import { EColor, EAxis, EEdgeType, ECubeFace, AxisEdgeCubeSideMap, CubeFaceColorMap } from './common/CommonConstants';
+import { IAxisEdgeMap } from './common/CommonTypes';
 
-
-enum EEdgeAxisType {
-    near = 'near',
-    far = 'far',
-}
-
-enum EAxis {
-    x = 'x',
-    y = 'y',
-    z = 'z',
-}
-interface IAxisEdgeMap {
-    [EAxis.x]: EEdgeAxisType;
-    [EAxis.y]: EEdgeAxisType;
-    [EAxis.z]: EEdgeAxisType;
-}
-
-const AxisEdgeCubeSideMap = {
-    [EAxis.x]: {
-        [EEdgeAxisType.near]: ECubeSide.left,
-        [EEdgeAxisType.far]: ECubeSide.right,
-    },
-    [EAxis.y]: {
-        [EEdgeAxisType.near]: ECubeSide.bottom,
-        [EEdgeAxisType.far]: ECubeSide.top,
-    },
-    [EAxis.z]: {
-        [EEdgeAxisType.near]: ECubeSide.back,
-        [EEdgeAxisType.far]: ECubeSide.front
-    },
+const getCubeFace = (axis: EAxis, edgeType: EEdgeType) => {
+    const cubeFaceEdgeTypeMap = {
+        [ECubeFace.left]: axis === EAxis.z && edgeType === EEdgeType.far,
+        [ECubeFace.right]: axis === EAxis.x && edgeType === EEdgeType.far,
+        [ECubeFace.top]: axis === EAxis.y && edgeType === EEdgeType.far,
+        [ECubeFace.bottom]: axis === EAxis.y && edgeType === EEdgeType.near,
+        [ECubeFace.backLeft]: axis === EAxis.x && edgeType === EEdgeType.near,
+        [ECubeFace.backRight]: axis === EAxis.z && edgeType === EEdgeType.near,
+    };
+    const [[face]] = Object.entries(cubeFaceEdgeTypeMap).filter(([_, check]) => check);
+    return face as ECubeFace;
 };
 
-const CollorAxisMap = {
-    [EAxis.x]: EColor.orange,
-    [EAxis.y]: EColor.red,
-    [EAxis.z]: EColor.blue,
-};
-
-const setCubeColorByAxisEdgeMap = (axisEdgeMap: IAxisEdgeMap) => {
+const getCubeColoredByAxisEdgeMap = (axisEdgeMap: IAxisEdgeMap) => {
     const sideColorMap: Map<ECubeSide, EColor> = new Map([]);
 
     for (const axis in axisEdgeMap) {
         const edgeType = axisEdgeMap[axis as unknown as EAxis];
         if (edgeType !== null) {
             const side = AxisEdgeCubeSideMap[axis as EAxis][edgeType];
-            sideColorMap.set(side, CollorAxisMap[axis as EAxis]);
+
+            sideColorMap.set(side, CubeFaceColorMap[getCubeFace(axis as unknown as EAxis, edgeType)]);
         }
     }
     return new CubeMultiColored(sideColorMap);
 };
 
-const isEdgeNear = (index: number) => index === 0;
-const isEdgeFar = (index: number, n: number) => index === n - 1;
-const getEdgeType = (index: number, n: number) => {
-    if (isEdgeFar(index, n)) return EEdgeAxisType.far;
-    if (isEdgeNear(index)) return EEdgeAxisType.near;
-    return null;
-};
 
-function coordinateCubeFactory(xIndex: number, yIndex: number, zIndex: number, n: number) {
-    // const cube = new CubeMultiColored();
 
-    const axisEdgeMap: IAxisEdgeMap = {
+const getAxisEdgeMap = (xIndex: number, yIndex: number, zIndex: number, n: number): IAxisEdgeMap => {
+    const isEdgeNear = (index: number) => index === 0;
+    const isEdgeFar = (index: number, n: number) => index === n - 1;
+    const getEdgeType = (index: number, n: number) => {
+        if (isEdgeFar(index, n)) return EEdgeType.far;
+        if (isEdgeNear(index)) return EEdgeType.near;
+        return null;
+    };
+    return {
         [EAxis.x]: getEdgeType(xIndex, n),
         [EAxis.y]: getEdgeType(yIndex, n),
         [EAxis.z]: getEdgeType(zIndex, n),
     };
-    const cubeColored = setCubeColorByAxisEdgeMap(axisEdgeMap);
-    cubeColored.coords = [xIndex, yIndex, zIndex];
-    cubeColored.data = axisEdgeMap;
+};
+
+function coordinateCubeFactory(xIndex: number, yIndex: number, zIndex: number, n: number) {
+    const axisEdgeMap: IAxisEdgeMap = getAxisEdgeMap(xIndex, yIndex, zIndex, n);
+    const cube = getCubeColoredByAxisEdgeMap(axisEdgeMap);
+    cube.coords = [xIndex, yIndex, zIndex];
+    cube.data = axisEdgeMap;
 
 
-    const centerBias = n / 2 * cubeColored.shapeSize - cubeColored.shapeSize / 2;
-    // const centerBias = 0;
-    cubeColored.mesh.translateX(xIndex * (100 + cubeColored.shapeSize) - centerBias);
-    cubeColored.mesh.translateY(yIndex * (100 + cubeColored.shapeSize) - centerBias);
-    cubeColored.mesh.translateZ(zIndex * (100 + cubeColored.shapeSize) - centerBias);
+    const centerBias = n / 2 * cube.shapeSize - cube.shapeSize / 2;
+    cube.mesh.translateX(xIndex * (100 + cube.shapeSize) - centerBias);
+    cube.mesh.translateY(yIndex * (100 + cube.shapeSize) - centerBias);
+    cube.mesh.translateZ(zIndex * (100 + cube.shapeSize) - centerBias);
 
-
-
-
-    return cubeColored;
+    return cube;
 }
 
 /**
@@ -92,9 +68,6 @@ function coordinateCubeFactory(xIndex: number, yIndex: number, zIndex: number, n
  * @param n размерность
  */
 export function generateCubes(n: number): Cube[] {
-    // const oneColored = n * n * faces;
-    // const twoColored = edges * (n - 2);
-    // const threeColored = tops;
 
     const list = new Array(n).fill(null).map((_, index) => index);
     console.log(list, arguments);

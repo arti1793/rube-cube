@@ -40,9 +40,9 @@ export class Playground {
 
     setCameraPosition() {
         /** camera position */
-        this.camera.position.y = 0;
-        this.camera.position.z = 5 * 1000;
-        this.camera.position.x = 0;
+        this.camera.position.y = 8 * 1000;
+        this.camera.position.z = 8 * 1000;
+        this.camera.position.x = 8 * 1000;
     }
 
     handleMouseMove = () => {
