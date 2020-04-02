@@ -39,6 +39,8 @@
     "karma-webpack": "3.0.0",
     "source-map-loader": "0.2.3",
     "tslint": "5.17.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-eslint-rules": "^5.4.0",
     "tslint-loader": "3.6.0",
     "typescript": "3.5.1",
     "webpack": "^4.42.1",
