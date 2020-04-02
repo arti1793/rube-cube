@@ -20,7 +20,7 @@ export class Cube {
 
     public readonly shapeSize = 1000;
     // all the cubes were black from the start
-    protected materials = [
+    public materials = [
         this.getMaterial(EColor.black),
         this.getMaterial(EColor.black),
         this.getMaterial(EColor.black),
@@ -38,7 +38,7 @@ export class Cube {
     }
 
     constructor() {
-        this.geometry = new BoxGeometry(this.shapeSize, this.shapeSize, this.shapeSize, 10, 10, 10);
+        this.geometry = new BoxGeometry(this.shapeSize, this.shapeSize, this.shapeSize, 15, 15, 15);
         this.mesh = new Mesh(this.geometry, this.materials);
     }
 }
@@ -50,18 +50,27 @@ export class CubeOneColored extends Cube {
         super();
         const materials = this.materials;
         materials[side] = this.getMaterial(color);
-        this.mesh.material = materials;
+        this.materials = materials;
     }
 }
 
 export class CubeMultiColored extends Cube {
-    constructor(sideColorMap: Map<ECubeSide, EColor>) {
-        super();
+
+    public coords: [number, number, number];
+    public data = {};
+
+    changeSideColors = (sideColorMap: Map<ECubeSide, EColor>) => {
         const materials = this.materials.map((material, side) =>
             sideColorMap.has(side) ?
                 this.getMaterial(sideColorMap.get(side))
                 : material);
-        this.mesh.material = materials;
+        this.materials = materials;
+        this.mesh.material = this.materials;
+    }
+    constructor(sideColorMap: Map<ECubeSide, EColor>) {
+        super();
+        this.changeSideColors(sideColorMap);
+        console.log('cube', sideColorMap);
     }
 
 }
