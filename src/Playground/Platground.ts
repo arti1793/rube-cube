@@ -27,6 +27,14 @@ export class Playground {
   public axisHelper = new AxesHelper(500);
 
   public cubeList: Cube[] = generateCubes(3);
+
+  private fpsInterval = 15;
+  private lastDrawTime: number;
+  private frameCount: number;
+  private lastSampleTime: number;
+  private intervalID: NodeJS.Timer;
+  private requestID: number;
+
   constructor(element: Element) {
     if (!element) {
       throw new Error('please specify element to append a cube to');
@@ -44,20 +52,71 @@ export class Playground {
     this.scene.add(this.axisHelper);
     this.scene.add(cubeGroup);
     this.scene.background = new Color(EColor.blue);
-    this.scene.fog = new Fog(EColor.blue, 1000, 16000);
+    this.scene.fog = new Fog(EColor.blue, 1400, 1500);
 
-    this.render();
+    this.startAnimating(25);
   }
 
-  public setCameraPosition() {
+  public setCameraPosition = () => {
     /** camera position */
     this.camera.position.y = 8 * 100;
     this.camera.position.z = 8 * 100;
     this.camera.position.x = 8 * 100;
-  }
+  };
 
-  public render = () => {
-    window.requestAnimationFrame(this.render);
+  private startAnimating = (fps: number, sampleFreq: number = 500) => {
+    this.fpsInterval = 1000 / fps;
+    this.lastDrawTime = performance.now();
+    this.lastSampleTime = this.lastDrawTime;
+    this.frameCount = 0;
+
+    this.animate(window.performance.now());
+
+    this.intervalID = setInterval(this.sampleFps, sampleFreq);
+  };
+
+  private sampleFps = () => {
+    // sample FPS
+    const now = performance.now();
+    if (this.frameCount > 0) {
+      const currentFps = (
+        (this.frameCount / (now - this.lastSampleTime)) *
+        1000
+      ).toFixed(2);
+      document.getElementById('fps').textContent = currentFps + ' fps';
+
+      this.frameCount = 0;
+    }
+
+    this.lastSampleTime = now;
+  };
+
+  private drawNextFrame = (now: number) => {
+    this.render();
+  };
+
+  private animate = (now: number) => {
+    // request another frame
+    this.requestID = requestAnimationFrame(this.animate);
+
+    // calc elapsed time since last loop
+    const elapsed = now - this.lastDrawTime;
+
+    // if enough time has elapsed, draw the next frame
+    if (elapsed > this.fpsInterval) {
+      // Get ready for next frame by setting lastDrawTime=now, but...
+      // Also, adjust for fpsInterval not being multiple of 16.67
+      this.lastDrawTime = now - (elapsed % this.fpsInterval);
+
+      // draw
+      this.drawNextFrame(now);
+
+      this.frameCount++;
+    }
+  };
+
+  private render = () => {
+    // window.requestAnimationFrame(this.render);
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
   };
