@@ -7,8 +7,8 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { CubeRube } from '../Cube/CubeRube';
 import { EColor } from './common/CommonConstants';
-import { CubeRube } from './CubeRube';
 
 export class Playground {
   public scene = new Scene();

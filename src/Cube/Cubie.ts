@@ -1,8 +1,8 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
-import { EColor } from './common/CommonConstants';
-import { ISceneAttachable } from './common/CommonTypes';
+import { EColor } from '../Playground/common/CommonConstants';
+import { ISceneAttachable } from '../Playground/common/CommonTypes';
 
-export enum ECubeSide {
+export enum ECubieSide {
   right,
   left,
   top,
@@ -11,15 +11,13 @@ export enum ECubeSide {
   back,
 }
 
-export interface ICubeOptions {
-  shapeSize: number;
-}
-
 /** black cube with given size */
-export class Cube implements ISceneAttachable {
+export class Cubie implements ISceneAttachable {
   public readonly shapeSize = 100;
-  // all the cubes were black from the start
-  public materials = [
+
+  public threeObject: Mesh;
+  // all the cubes are black from the start
+  protected materials = [
     this.getMaterial(EColor.black),
     this.getMaterial(EColor.black),
     this.getMaterial(EColor.black),
@@ -28,9 +26,7 @@ export class Cube implements ISceneAttachable {
     this.getMaterial(EColor.black),
   ];
 
-  public threeObject: Mesh;
-
-  public geometry: BoxGeometry;
+  private geometry: BoxGeometry;
 
   constructor() {
     this.geometry = new BoxGeometry(
@@ -50,15 +46,13 @@ export class Cube implements ISceneAttachable {
 }
 
 // tslint:disable-next-line: max-classes-per-file
-export class CubeMultiColored extends Cube {
-  public coords: [number, number, number];
-  public data = {};
-  constructor(sideColorMap: Map<ECubeSide, EColor>) {
+export class CubieMultiColored extends Cubie {
+  constructor(sideColorMap: Map<ECubieSide, EColor>) {
     super();
     this.changeSideColors(sideColorMap);
   }
 
-  public changeSideColors = (sideColorMap: Map<ECubeSide, EColor>) => {
+  public changeSideColors = (sideColorMap: Map<ECubieSide, EColor>) => {
     const materials = this.materials.map((material, side) =>
       sideColorMap.has(side)
         ? this.getMaterial(sideColorMap.get(side))

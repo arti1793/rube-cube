@@ -1,4 +1,4 @@
-import { ECubeSide } from '../Cube';
+import { ECubieSide } from '../../Cube/Cubie';
 
 export enum EColor {
   red = 0xff0000,
@@ -6,7 +6,6 @@ export enum EColor {
   blue = 0x0000ff,
   orange = 0xffa500,
   yellow = 0xffff00,
-
   green = 0x00ff00,
 
   // for inner sides
@@ -34,7 +33,7 @@ export enum EAxis {
   z = 'z',
 }
 
-export const CubeFaceEdgeTypeMap = new Map([
+export const CUBE_FACE_EDGE_TYPE_MAP = new Map([
   [ECubeFace.left, { axis: EAxis.z, edgeType: EEdgeType.far }],
   [ECubeFace.right, { axis: EAxis.x, edgeType: EEdgeType.far }],
   [ECubeFace.top, { axis: EAxis.y, edgeType: EEdgeType.far }],
@@ -43,26 +42,26 @@ export const CubeFaceEdgeTypeMap = new Map([
   [ECubeFace.backRight, { axis: EAxis.z, edgeType: EEdgeType.near }],
 ]);
 
-export const AxisEdgeCubeSideMap = {
+export const AXIS_EDGE_CUBE_SIDE_MAP = {
   [EAxis.x]: {
-    [EEdgeType.near]: ECubeSide.left,
-    [EEdgeType.far]: ECubeSide.right,
+    [EEdgeType.near]: ECubieSide.left,
+    [EEdgeType.far]: ECubieSide.right,
   },
   [EAxis.y]: {
-    [EEdgeType.near]: ECubeSide.bottom,
-    [EEdgeType.far]: ECubeSide.top,
+    [EEdgeType.near]: ECubieSide.bottom,
+    [EEdgeType.far]: ECubieSide.top,
   },
   [EAxis.z]: {
-    [EEdgeType.near]: ECubeSide.back,
-    [EEdgeType.far]: ECubeSide.front,
+    [EEdgeType.near]: ECubieSide.back,
+    [EEdgeType.far]: ECubieSide.front,
   },
 };
 
-export const CubeFaceColorMap = {
-  [ECubeFace.left]: EColor.blue,
-  [ECubeFace.right]: EColor.orange,
-  [ECubeFace.top]: EColor.red,
-  [ECubeFace.bottom]: EColor.white,
-  [ECubeFace.backLeft]: EColor.yellow,
-  [ECubeFace.backRight]: EColor.green,
-};
+export const CUBE_FACE_COLOR_MAP = new Map([
+  [ECubeFace.left, EColor.blue],
+  [ECubeFace.right, EColor.orange],
+  [ECubeFace.top, EColor.red],
+  [ECubeFace.bottom, EColor.white],
+  [ECubeFace.backLeft, EColor.yellow],
+  [ECubeFace.backRight, EColor.green],
+]);
