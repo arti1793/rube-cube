@@ -1,16 +1,15 @@
 import { Group } from 'three';
 import { ISceneAttachable } from '../Playground/common/CommonTypes';
-import { Cubie } from './Cubie';
-import { TopologyGenerator } from './TopologyGenerator';
+import { ICubieLocated, TopologyGenerator } from './TopologyGenerator';
 
 export class CubeRube implements ISceneAttachable {
   public threeObject: Group = new Group();
-  private cubeList: Cubie[];
+  private cubiesLocated: ICubieLocated[];
 
   constructor(n: number) {
-    this.cubeList = TopologyGenerator(n);
+    this.cubiesLocated = TopologyGenerator(n);
     this.threeObject.add(
-      ...this.cubeList.map(({ threeObject }) => threeObject)
+      ...this.cubiesLocated.map(({ cubie: { threeObject } }) => threeObject)
     );
   }
 }
