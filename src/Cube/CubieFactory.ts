@@ -60,7 +60,7 @@ export const CubieFactory: TCubieFactory = (
   );
   const sideColorMap: Map<ECubieSide, EColor> = new Map([]);
 
-  for (const axis of Object.keys(axisEdgeMap)) {
+  for (const [axis] of Object.entries(axisEdgeMap)) {
     const edgeType = axisEdgeMap[(axis as unknown) as EAxis];
     if (edgeType !== null) {
       const side = AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType];

@@ -106,6 +106,8 @@ export class Playground {
   private render = () => {
     this.controls.update();
 
+    this.cubeRube.animationHook();
+
     this.renderer.render(this.scene, this.camera);
   };
 }

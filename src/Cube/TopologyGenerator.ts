@@ -1,10 +1,13 @@
-import { CUBE_FACE_COLOR_MAP } from '../Playground/common/CommonConstants';
+import {
+  CUBE_FACE_COLOR_MAP,
+  EAxis,
+} from '../Playground/common/CommonConstants';
 import { Cubie } from './Cubie';
 import { CubieFactory, TCubieFactory } from './CubieFactory';
 
 export interface ICubieLocated {
   cubie: Cubie;
-  coords: [number, number, number];
+  coords: { [key in keyof typeof EAxis]: number };
 }
 
 function CubieLocator(
@@ -26,7 +29,10 @@ function CubieLocator(
   cubie.threeObject.translateY(yIndex * (cubie.shapeSize + gap) + bias);
   cubie.threeObject.translateZ(zIndex * (cubie.shapeSize + gap) + bias);
 
-  return { cubie, coords: [xIndex, yIndex, zIndex] };
+  return {
+    coords: { [EAxis.x]: xIndex, [EAxis.y]: yIndex, [EAxis.z]: zIndex },
+    cubie,
+  };
 }
 
 /**

@@ -1,15 +1,31 @@
 import { Group, MathUtils, Vector3 } from 'three';
+import { EAxis } from '../Playground/common/CommonConstants';
 import { ISceneAttachable } from '../Playground/common/CommonTypes';
 import { ICubieLocated, TopologyGenerator } from './TopologyGenerator';
 
 export class CubeRube implements ISceneAttachable {
   public threeObject: Group = new Group();
   public rotatingGroup: Group = new Group();
-  private maxIndex: number;
+
+  private clearGroup: () => void;
+
+  private animationProgress: {
+    progressDeg: number;
+    stepDeg: 1;
+    endDeg: number;
+    axis: EAxis;
+    index: number;
+  } | null = null;
+
   private cubiesLocated: ICubieLocated[];
 
+  private axisRotationMap = {
+    [EAxis.x]: new Vector3(1, 0, 0),
+    [EAxis.y]: new Vector3(0, 1, 0),
+    [EAxis.z]: new Vector3(0, 0, 1),
+  };
+
   constructor(n: number) {
-    this.maxIndex = n - 1;
     this.cubiesLocated = TopologyGenerator(n);
     this.threeObject.add(
       ...this.cubiesLocated.map(({ cubie: { threeObject } }) => threeObject)
@@ -17,15 +33,55 @@ export class CubeRube implements ISceneAttachable {
     this.threeObject.add(this.rotatingGroup);
   }
 
-  public test = () => {
-    const selectedX = this.maxIndex;
-    const cubies = this.cubiesLocated
-      .filter(({ coords: [x] }) => x === selectedX)
-      .map(({ cubie }) => cubie.threeObject);
-    this.rotatingGroup.add(...cubies);
+  public animationHook() {
+    if (this.isContinuingAnimation()) {
+      this.rotate();
+    }
+  }
+
+  public rotate = () => {
+    const { axis, stepDeg } = this.animationProgress;
     this.rotatingGroup.rotateOnAxis(
-      new Vector3(1, 0, 0).normalize(),
-      MathUtils.degToRad(90)
+      this.axisRotationMap[axis],
+      MathUtils.degToRad(stepDeg)
     );
+    this.animationProgress.progressDeg += stepDeg;
   };
+
+  public startAnimation(endDeg: number, axis: EAxis, index: number) {
+    this.animationProgress = {
+      axis,
+      endDeg,
+      index,
+      progressDeg: 0,
+      stepDeg: 1,
+    };
+    this.clearGroup = this.recombineRotatingElementsToGroup();
+  }
+
+  private recombineRotatingElementsToGroup() {
+    const { axis, index } = this.animationProgress;
+    const cubies = this.cubiesLocated
+      .filter(({ coords: { [axis]: ind } }) => ind === index)
+      .map(({ cubie }) => cubie.threeObject);
+
+    this.rotatingGroup.add(...cubies);
+    return () => {
+      // TODO
+      // this.rotatingGroup.remove(...cubies);
+      // this.threeObject.add(...this.rotatingGroup.children);
+    };
+  }
+
+  private isContinuingAnimation() {
+    if (!this.animationProgress) {
+      return false;
+    }
+    if (this.animationProgress.progressDeg >= this.animationProgress.endDeg) {
+      this.animationProgress = null;
+      this.clearGroup();
+      return false;
+    }
+    return true;
+  }
 }
