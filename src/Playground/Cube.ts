@@ -1,5 +1,6 @@
 import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
 import { EColor } from './common/CommonConstants';
+import { ISceneAttachable } from './common/CommonTypes';
 
 export enum ECubeSide {
   right,
@@ -15,7 +16,7 @@ export interface ICubeOptions {
 }
 
 /** black cube with given size */
-export class Cube {
+export class Cube implements ISceneAttachable {
   public readonly shapeSize = 100;
   // all the cubes were black from the start
   public materials = [
@@ -27,7 +28,7 @@ export class Cube {
     this.getMaterial(EColor.black),
   ];
 
-  public mesh: Mesh;
+  public threeObject: Mesh;
 
   public geometry: BoxGeometry;
 
@@ -40,7 +41,7 @@ export class Cube {
       15,
       15
     );
-    this.mesh = new Mesh(this.geometry, this.materials);
+    this.threeObject = new Mesh(this.geometry, this.materials);
   }
 
   protected getMaterial(color: EColor) {
@@ -64,6 +65,6 @@ export class CubeMultiColored extends Cube {
         : material
     );
     this.materials = materials;
-    this.mesh.material = this.materials;
+    this.threeObject.material = this.materials;
   };
 }

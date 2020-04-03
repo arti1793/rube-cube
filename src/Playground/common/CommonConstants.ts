@@ -34,6 +34,15 @@ export enum EAxis {
   z = 'z',
 }
 
+export const CubeFaceEdgeTypeMap = new Map([
+  [ECubeFace.left, { axis: EAxis.z, edgeType: EEdgeType.far }],
+  [ECubeFace.right, { axis: EAxis.x, edgeType: EEdgeType.far }],
+  [ECubeFace.top, { axis: EAxis.y, edgeType: EEdgeType.far }],
+  [ECubeFace.bottom, { axis: EAxis.y, edgeType: EEdgeType.near }],
+  [ECubeFace.backLeft, { axis: EAxis.x, edgeType: EEdgeType.near }],
+  [ECubeFace.backRight, { axis: EAxis.z, edgeType: EEdgeType.near }],
+]);
+
 export const AxisEdgeCubeSideMap = {
   [EAxis.x]: {
     [EEdgeType.near]: ECubeSide.left,

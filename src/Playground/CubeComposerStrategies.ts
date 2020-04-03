@@ -1,6 +1,7 @@
 import {
   AxisEdgeCubeSideMap,
   CubeFaceColorMap,
+  CubeFaceEdgeTypeMap,
   EAxis,
   EColor,
   ECubeFace,
@@ -10,16 +11,9 @@ import { IAxisEdgeMap } from './common/CommonTypes';
 import { Cube, CubeMultiColored, ECubeSide } from './Cube';
 
 const getCubeFace = (axis: EAxis, edgeType: EEdgeType) => {
-  const cubeFaceEdgeTypeMap = {
-    [ECubeFace.left]: axis === EAxis.z && edgeType === EEdgeType.far,
-    [ECubeFace.right]: axis === EAxis.x && edgeType === EEdgeType.far,
-    [ECubeFace.top]: axis === EAxis.y && edgeType === EEdgeType.far,
-    [ECubeFace.bottom]: axis === EAxis.y && edgeType === EEdgeType.near,
-    [ECubeFace.backLeft]: axis === EAxis.x && edgeType === EEdgeType.near,
-    [ECubeFace.backRight]: axis === EAxis.z && edgeType === EEdgeType.near,
-  };
-  const [[face]] = Object.entries(cubeFaceEdgeTypeMap).filter(
-    ([_, check]) => check
+  const [[face]] = [...CubeFaceEdgeTypeMap].filter(
+    ([_, { axis: mapAxis, edgeType: mapEdgeType }]) =>
+      mapAxis === axis && mapEdgeType === edgeType
   );
   return face as ECubeFace;
 };
@@ -76,10 +70,10 @@ function coordinateCubeFactory(
   cube.coords = [xIndex, yIndex, zIndex];
   cube.data = axisEdgeMap;
 
-  const centerBias = (n / 2) * cube.shapeSize - cube.shapeSize / 2;
-  cube.mesh.translateX(xIndex * (10 + cube.shapeSize) - centerBias);
-  cube.mesh.translateY(yIndex * (10 + cube.shapeSize) - centerBias);
-  cube.mesh.translateZ(zIndex * (10 + cube.shapeSize) - centerBias);
+  const centerBias = 0;
+  cube.threeObject.translateX(xIndex * (5 + cube.shapeSize) - centerBias);
+  cube.threeObject.translateY(yIndex * (5 + cube.shapeSize) - centerBias);
+  cube.threeObject.translateZ(zIndex * (5 + cube.shapeSize) - centerBias);
 
   return cube;
 }
