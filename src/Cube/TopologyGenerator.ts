@@ -19,10 +19,12 @@ function CubieLocator(
     n,
     CUBE_FACE_COLOR_MAP
   );
+  const gap = 5;
 
-  cubie.threeObject.translateX(xIndex * (5 + cubie.shapeSize));
-  cubie.threeObject.translateY(yIndex * (5 + cubie.shapeSize));
-  cubie.threeObject.translateZ(zIndex * (5 + cubie.shapeSize));
+  const bias = cubie.shapeSize / 2 - (n / 2) * cubie.shapeSize - gap * (n - 2);
+  cubie.threeObject.translateX(xIndex * (cubie.shapeSize + gap) + bias);
+  cubie.threeObject.translateY(yIndex * (cubie.shapeSize + gap) + bias);
+  cubie.threeObject.translateZ(zIndex * (cubie.shapeSize + gap) + bias);
 
   return { cubie, coords: [xIndex, yIndex, zIndex] };
 }

@@ -1,6 +1,5 @@
 import {
   AxesHelper,
-  Box3,
   Color,
   PerspectiveCamera,
   Scene,
@@ -9,6 +8,8 @@ import {
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { CubeRube } from '../Cube/CubeRube';
 import { EColor } from './common/CommonConstants';
+
+const N = 3;
 
 export class Playground {
   public scene = new Scene();
@@ -24,7 +25,7 @@ export class Playground {
 
   public axisHelper = new AxesHelper(500);
 
-  public cubeRube = new CubeRube(6);
+  public cubeRube = new CubeRube(N);
 
   private fpsInterval = 15;
 
@@ -44,10 +45,10 @@ export class Playground {
     /** mounting point */
     element.appendChild(this.renderer.domElement);
 
-    new Box3()
-      .setFromObject(this.cubeRube.threeObject)
-      .getCenter(this.cubeRube.threeObject.position)
-      .multiplyScalar(-1);
+    // new Box3()
+    //   .setFromObject(this.cubeRube.threeObject)
+    //   .getCenter(this.cubeRube.threeObject.position)
+    //   .multiplyScalar(-1);
     this.scene.add(this.cubeRube.threeObject);
     this.scene.add(this.axisHelper);
     this.scene.background = new Color(EColor.white);
