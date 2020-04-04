@@ -6,8 +6,8 @@ import {
   EColor,
   ECubeFace,
   EEdgeType,
-} from '../Playground/common/CommonConstants';
-import { IAxisEdgeMap } from '../Playground/common/CommonTypes';
+} from '../common/CommonConstants';
+import { IAxisEdgeMap } from '../common/CommonTypes';
 import { Cubie, CubieMultiColored, ECubieSide } from './Cubie';
 
 export type TCubieFactory = (

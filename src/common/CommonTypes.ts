@@ -7,7 +7,7 @@ export interface IAxisEdgeMap {
   [EAxis.z]: EEdgeType;
 }
 
-export type TThreeObject = Group | Mesh;
+export type TThreeObject = Group | Mesh | Mesh[] | Group[];
 
 export interface ISceneAttachable {
   threeObject: TThreeObject;

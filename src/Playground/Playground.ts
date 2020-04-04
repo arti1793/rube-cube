@@ -6,8 +6,8 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { EColor } from '../common/CommonConstants';
 import { CubeRube } from '../Cube/CubeRube';
-import { EColor } from './common/CommonConstants';
 
 const N = 3;
 
@@ -45,10 +45,8 @@ export class Playground {
     /** mounting point */
     element.appendChild(this.renderer.domElement);
 
-    // new Box3()
-    //   .setFromObject(this.cubeRube.threeObject)
-    //   .getCenter(this.cubeRube.threeObject.position)
-    //   .multiplyScalar(-1);
+    this.scene.matrixAutoUpdate = true;
+    this.scene.autoUpdate = true;
     this.cubeRube.connectTo(this.scene);
     this.scene.add(this.axisHelper);
     this.scene.background = new Color(EColor.white);

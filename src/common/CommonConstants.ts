@@ -1,4 +1,4 @@
-import { ECubieSide } from '../../Cube/Cubie';
+import { ECubieSide } from '../Cube/Cubie';
 
 export enum EColor {
   red = 0xff0000,
@@ -31,6 +31,11 @@ export enum EAxis {
   x = 'x',
   y = 'y',
   z = 'z',
+}
+
+export enum ERotation {
+  clockwise = 'clockwise',
+  counterclockwise = 'counterclockwise',
 }
 
 export const CUBE_FACE_EDGE_TYPE_MAP = new Map([

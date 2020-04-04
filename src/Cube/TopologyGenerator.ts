@@ -1,14 +1,7 @@
-import {
-  CUBE_FACE_COLOR_MAP,
-  EAxis,
-} from '../Playground/common/CommonConstants';
+import { Vector3 } from 'three';
+import { CUBE_FACE_COLOR_MAP } from '../common/CommonConstants';
 import { Cubie } from './Cubie';
 import { CubieFactory, TCubieFactory } from './CubieFactory';
-
-export interface ICubieLocated {
-  cubie: Cubie;
-  coords: { [key in keyof typeof EAxis]: number };
-}
 
 function CubieLocator(
   xIndex: number,
@@ -16,7 +9,7 @@ function CubieLocator(
   zIndex: number,
   n: number,
   cubieFactory: TCubieFactory
-): ICubieLocated {
+): Cubie {
   const cubie = cubieFactory(
     { xIndex, yIndex, zIndex },
     n,
@@ -29,10 +22,8 @@ function CubieLocator(
   cubie.threeObject.translateY(yIndex * (cubie.shapeSize + gap) + bias);
   cubie.threeObject.translateZ(zIndex * (cubie.shapeSize + gap) + bias);
 
-  return {
-    coords: { [EAxis.x]: xIndex, [EAxis.y]: yIndex, [EAxis.z]: zIndex },
-    cubie,
-  };
+  cubie.coords = new Vector3(xIndex, yIndex, zIndex);
+  return cubie;
 }
 
 /**
@@ -41,10 +32,10 @@ function CubieLocator(
  * @param tops вершины
  * @param n размерность
  */
-export function TopologyGenerator(n: number): ICubieLocated[] {
+export function TopologyGenerator(n: number): Cubie[] {
   const range = new Array(n).fill(null).map((_, index) => index);
 
-  const cubies: ICubieLocated[] = [];
+  const cubies: Cubie[] = [];
   for (const xIndex of range) {
     for (const yIndex of range) {
       for (const zIndex of range) {

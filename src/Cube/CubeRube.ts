@@ -1,11 +1,19 @@
-import { Group, MathUtils, Scene, Vector3 } from 'three';
-import { EAxis } from '../Playground/common/CommonConstants';
-import { ISceneAttachable } from '../Playground/common/CommonTypes';
-import { ICubieLocated, TopologyGenerator } from './TopologyGenerator';
+import { Group, MathUtils, Mesh, Scene, Vector3 } from 'three';
+import { EAxis, ERotation } from '../common/CommonConstants';
+import { ISceneAttachable } from '../common/CommonTypes';
+import { Cubie } from './Cubie';
+import { TopologyGenerator } from './TopologyGenerator';
 
 export class CubeRube implements ISceneAttachable {
-  public threeObject: Group = new Group();
-  public rotatingGroup: Group = new Group();
+  public threeObject: Mesh[];
+  public rotatingGroup: Group;
+
+  public axisRotationMap = {
+    [EAxis.x]: new Vector3(1, 0, 0),
+    [EAxis.y]: new Vector3(0, 1, 0),
+    [EAxis.z]: new Vector3(0, 0, 1),
+  };
+  private scene: Scene;
 
   private clearGroup: () => void;
 
@@ -17,24 +25,18 @@ export class CubeRube implements ISceneAttachable {
     index: number;
   } | null = null;
 
-  private cubiesLocated: ICubieLocated[];
-
-  private axisRotationMap = {
-    [EAxis.x]: new Vector3(1, 0, 0),
-    [EAxis.y]: new Vector3(0, 1, 0),
-    [EAxis.z]: new Vector3(0, 0, 1),
-  };
+  private cubiesLocated: Cubie[];
 
   constructor(n: number) {
     this.cubiesLocated = TopologyGenerator(n);
-    this.threeObject.add(
-      ...this.cubiesLocated.map(({ cubie: { threeObject } }) => threeObject)
-    );
+    this.threeObject = [
+      ...this.cubiesLocated.map(({ threeObject }) => threeObject),
+    ];
   }
 
   public connectTo(scene: Scene) {
-    scene.add(this.threeObject);
-    scene.add(this.rotatingGroup);
+    this.scene = scene;
+    scene.add(...this.threeObject);
   }
 
   public animationHook() {
@@ -50,10 +52,7 @@ export class CubeRube implements ISceneAttachable {
     if (progressDeg + stepDeg > endDeg) {
       currentStep = endDeg - progressDeg;
     }
-    this.rotatingGroup.rotateOnAxis(
-      this.axisRotationMap[axis],
-      MathUtils.degToRad(currentStep)
-    );
+    this.rotatingGroup.rotation[axis] += MathUtils.degToRad(currentStep);
     this.animationProgress.progressDeg += currentStep;
   };
 
@@ -70,15 +69,36 @@ export class CubeRube implements ISceneAttachable {
 
   private recombineRotatingElementsToGroup() {
     const { axis, index } = this.animationProgress;
-    const cubies = this.cubiesLocated
-      .filter(({ coords: { [axis]: ind } }) => ind === index)
-      .map(({ cubie }) => cubie.threeObject);
+    const sliceOfCubies = this.cubiesLocated.filter(
+      ({ coords: { [axis]: ind } }) => ind === index
+    );
+    const cubiesThreeObjects = sliceOfCubies.map(cubie => cubie.threeObject);
 
-    this.rotatingGroup.add(...cubies);
+    this.rotatingGroup = new Group();
+
+    this.rotatingGroup.add(...cubiesThreeObjects);
+    this.scene.add(this.rotatingGroup);
+
     return () => {
-      // TODO
-      // this.rotatingGroup.remove(...cubies);
-      // this.threeObject.add(...this.rotatingGroup.children);
+      this.scene.add(
+        ...sliceOfCubies.map(cubie => {
+          cubie.threeObject.applyMatrix4(this.rotatingGroup.matrix);
+          console.log(
+            'changing',
+            cubie.coords,
+            'to',
+            cubie.rotateCoordsOnAxis(axis, ERotation.counterclockwise, 3)
+          );
+          cubie.coords = cubie.rotateCoordsOnAxis(
+            axis,
+            ERotation.counterclockwise,
+            3
+          );
+          return cubie.threeObject;
+        })
+      );
+      this.scene.remove(this.rotatingGroup);
+      this.rotatingGroup = null;
     };
   }
 
@@ -86,9 +106,10 @@ export class CubeRube implements ISceneAttachable {
     if (!this.animationProgress) {
       return false;
     }
+
     if (this.animationProgress.progressDeg >= this.animationProgress.endDeg) {
-      this.animationProgress = null;
       this.clearGroup();
+      this.animationProgress = null;
       return false;
     }
     return true;

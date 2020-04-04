@@ -1,6 +1,13 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial, Scene } from 'three';
-import { EColor } from '../Playground/common/CommonConstants';
-import { ISceneAttachable } from '../Playground/common/CommonTypes';
+import {
+  BoxGeometry,
+  Matrix3,
+  Mesh,
+  MeshBasicMaterial,
+  Scene,
+  Vector3,
+} from 'three';
+import { EAxis, EColor, ERotation } from '../common/CommonConstants';
+import { ISceneAttachable } from '../common/CommonTypes';
 
 export enum ECubieSide {
   right,
@@ -11,11 +18,43 @@ export enum ECubieSide {
   back,
 }
 
+const rotationalMatrixX = (angle: number) => {
+  const matrix = new Matrix3();
+  matrix.elements = [
+    [1, 0, 0],
+    [0, Math.round(Math.cos(angle)), -Math.round(Math.sin(angle))],
+    [0, Math.round(Math.sin(angle)), Math.round(Math.cos(angle))],
+  ].flat(1);
+  return matrix;
+};
+const rotationalMatrixY = (angle: number) => {
+  const matrix = new Matrix3();
+  matrix.elements = [
+    [Math.round(Math.cos(angle)), 0, Math.round(Math.sin(angle))],
+    [0, 1, 0],
+    [-Math.round(Math.sin(angle)), 0, Math.round(Math.cos(angle))],
+  ].flat(1);
+  return matrix;
+};
+
+const rotationalMatrixZ = (angle: number) => {
+  const matrix = new Matrix3();
+  matrix.elements = [
+    [Math.round(Math.cos(angle)), -Math.round(Math.sin(angle)), 0],
+    [Math.round(Math.sin(angle)), Math.round(Math.cos(angle)), 0],
+    [0, 0, 1],
+  ].flat(1);
+  return matrix;
+};
+
 /** black cube with given size */
 export class Cubie implements ISceneAttachable {
   public readonly shapeSize = 100;
 
   public threeObject: Mesh;
+
+  public coords: Vector3;
+
   // all the cubes are black from the start
   protected materials = [
     this.getMaterial(EColor.black),
@@ -25,6 +64,12 @@ export class Cubie implements ISceneAttachable {
     this.getMaterial(EColor.black),
     this.getMaterial(EColor.black),
   ];
+
+  private axisToRotationalMatrixMap = {
+    [EAxis.x]: rotationalMatrixX,
+    [EAxis.y]: rotationalMatrixY,
+    [EAxis.z]: rotationalMatrixZ,
+  };
 
   private geometry: BoxGeometry;
 
@@ -38,6 +83,29 @@ export class Cubie implements ISceneAttachable {
       15
     );
     this.threeObject = new Mesh(this.geometry, this.materials);
+  }
+
+  public rotateCoordsOnAxis(
+    axis: EAxis,
+    rotation: ERotation = ERotation.clockwise,
+    n: number
+  ) {
+    const angleInRadians =
+      rotation === ERotation.clockwise ? Math.PI / 2 : -Math.PI / 2;
+    const bias = new Vector3(
+      Math.floor((n - 1) / 2),
+      Math.floor((n - 1) / 2),
+      Math.floor((n - 1) / 2)
+    );
+    const cubieVector = this.coords.clone();
+
+    const biased: Vector3 = cubieVector.sub(bias);
+    const matriced = biased.applyMatrix3(
+      this.axisToRotationalMatrixMap[axis](angleInRadians)
+    );
+    const result = matriced.add(bias);
+
+    return result;
   }
 
   public connectTo(scene: Scene) {
