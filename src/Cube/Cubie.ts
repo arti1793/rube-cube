@@ -1,4 +1,4 @@
-import { BoxGeometry, Mesh, MeshBasicMaterial } from 'three';
+import { BoxGeometry, Mesh, MeshBasicMaterial, Scene } from 'three';
 import { EColor } from '../Playground/common/CommonConstants';
 import { ISceneAttachable } from '../Playground/common/CommonTypes';
 
@@ -38,6 +38,10 @@ export class Cubie implements ISceneAttachable {
       15
     );
     this.threeObject = new Mesh(this.geometry, this.materials);
+  }
+
+  public connectTo(scene: Scene) {
+    scene.add(this.threeObject);
   }
 
   protected getMaterial(color: EColor) {

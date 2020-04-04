@@ -1,4 +1,4 @@
-import { Group, MathUtils, Vector3 } from 'three';
+import { Group, MathUtils, Scene, Vector3 } from 'three';
 import { EAxis } from '../Playground/common/CommonConstants';
 import { ISceneAttachable } from '../Playground/common/CommonTypes';
 import { ICubieLocated, TopologyGenerator } from './TopologyGenerator';
@@ -11,7 +11,7 @@ export class CubeRube implements ISceneAttachable {
 
   private animationProgress: {
     progressDeg: number;
-    stepDeg: 1;
+    stepDeg: number;
     endDeg: number;
     axis: EAxis;
     index: number;
@@ -30,7 +30,11 @@ export class CubeRube implements ISceneAttachable {
     this.threeObject.add(
       ...this.cubiesLocated.map(({ cubie: { threeObject } }) => threeObject)
     );
-    this.threeObject.add(this.rotatingGroup);
+  }
+
+  public connectTo(scene: Scene) {
+    scene.add(this.threeObject);
+    scene.add(this.rotatingGroup);
   }
 
   public animationHook() {
@@ -40,12 +44,17 @@ export class CubeRube implements ISceneAttachable {
   }
 
   public rotate = () => {
-    const { axis, stepDeg } = this.animationProgress;
+    const { axis, stepDeg, endDeg, progressDeg } = this.animationProgress;
+
+    let currentStep = stepDeg;
+    if (progressDeg + stepDeg > endDeg) {
+      currentStep = endDeg - progressDeg;
+    }
     this.rotatingGroup.rotateOnAxis(
       this.axisRotationMap[axis],
-      MathUtils.degToRad(stepDeg)
+      MathUtils.degToRad(currentStep)
     );
-    this.animationProgress.progressDeg += stepDeg;
+    this.animationProgress.progressDeg += currentStep;
   };
 
   public startAnimation(endDeg: number, axis: EAxis, index: number) {
@@ -54,7 +63,7 @@ export class CubeRube implements ISceneAttachable {
       endDeg,
       index,
       progressDeg: 0,
-      stepDeg: 1,
+      stepDeg: 4,
     };
     this.clearGroup = this.recombineRotatingElementsToGroup();
   }

@@ -1,4 +1,4 @@
-import { Group, Mesh } from 'three';
+import { Group, Mesh, Scene } from 'three';
 import { EAxis, EEdgeType } from './CommonConstants';
 
 export interface IAxisEdgeMap {
@@ -11,4 +11,5 @@ export type TThreeObject = Group | Mesh;
 
 export interface ISceneAttachable {
   threeObject: TThreeObject;
+  connectTo: (scene: Scene) => void;
 }

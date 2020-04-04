@@ -49,7 +49,7 @@ export class Playground {
     //   .setFromObject(this.cubeRube.threeObject)
     //   .getCenter(this.cubeRube.threeObject.position)
     //   .multiplyScalar(-1);
-    this.scene.add(this.cubeRube.threeObject);
+    this.cubeRube.connectTo(this.scene);
     this.scene.add(this.axisHelper);
     this.scene.background = new Color(EColor.white);
 
