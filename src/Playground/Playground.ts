@@ -6,10 +6,8 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { EColor } from '../common/CommonConstants';
+import { EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubeRube } from '../Cube/CubeRube';
-
-const N = 3;
 
 export class Playground {
   public scene = new Scene();
@@ -25,7 +23,7 @@ export class Playground {
 
   public axisHelper = new AxesHelper(500);
 
-  public cubeRube = new CubeRube(N);
+  public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
 
   private fpsInterval = 15;
 

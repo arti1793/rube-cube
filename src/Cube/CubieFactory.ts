@@ -73,5 +73,7 @@ export const CubieFactory: TCubieFactory = (
       );
     }
   }
-  return new CubieMultiColored(sideColorMap);
+  const cubie = new CubieMultiColored(sideColorMap);
+  cubie.meta.colors = [...sideColorMap.values()];
+  return cubie;
 };

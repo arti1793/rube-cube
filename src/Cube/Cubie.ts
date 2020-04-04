@@ -1,12 +1,13 @@
 import {
   BoxGeometry,
+  MathUtils,
   Matrix3,
   Mesh,
   MeshBasicMaterial,
   Scene,
   Vector3,
 } from 'three';
-import { EAxis, EColor, ERotation } from '../common/CommonConstants';
+import { EAxis, EColor } from '../common/CommonConstants';
 import { ISceneAttachable } from '../common/CommonTypes';
 
 export enum ECubieSide {
@@ -53,7 +54,10 @@ export class Cubie implements ISceneAttachable {
 
   public threeObject: Mesh;
 
-  public coords: Vector3;
+  public meta: {
+    coords?: Vector3;
+    colors?: EColor[];
+  } = {};
 
   // all the cubes are black from the start
   protected materials = [
@@ -85,21 +89,17 @@ export class Cubie implements ISceneAttachable {
     this.threeObject = new Mesh(this.geometry, this.materials);
   }
 
-  public rotateCoordsOnAxis(
-    axis: EAxis,
-    rotation: ERotation = ERotation.clockwise,
-    n: number
-  ) {
-    const angleInRadians =
-      rotation === ERotation.clockwise ? Math.PI / 2 : -Math.PI / 2;
+  public rotateCoordsOnAxis(axis: EAxis, angleDeg: number, n: number) {
+    const angleInRadians = MathUtils.degToRad(-angleDeg);
     const bias = new Vector3(
       Math.floor((n - 1) / 2),
       Math.floor((n - 1) / 2),
       Math.floor((n - 1) / 2)
     );
-    const cubieVector = this.coords.clone();
+    const cubieVector = this.meta.coords.clone();
 
     const biased: Vector3 = cubieVector.sub(bias);
+
     const matriced = biased.applyMatrix3(
       this.axisToRotationalMatrixMap[axis](angleInRadians)
     );
