@@ -2,12 +2,13 @@ import {
   BoxGeometry,
   MathUtils,
   Matrix3,
+  Matrix4,
   Mesh,
   MeshBasicMaterial,
   Scene,
   Vector3,
 } from 'three';
-import { EAxis, EColor } from '../common/CommonConstants';
+import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { ISceneAttachable } from '../common/CommonTypes';
 
 export enum ECubieSide {
@@ -89,7 +90,29 @@ export class Cubie implements ISceneAttachable {
     this.threeObject = new Mesh(this.geometry, this.materials);
   }
 
-  public rotateCoordsOnAxis(axis: EAxis, angleDeg: number, n: number) {
+  public applyRotationMatrix(
+    matrix: Matrix4,
+    options: { axis: EAxis; positive: boolean; deg: number }
+  ) {
+    // commits position of cubie saved in rotationGroup's matrix
+    this.threeObject.applyMatrix4(matrix);
+    // Updating coords metadata applying rotating matrix on biased index vectors
+    this.meta.coords = this.rotateCoordsOnAxis(
+      options.axis,
+      options.positive ? options.deg : -options.deg,
+      NUMBER_OF_CUBIES
+    );
+  }
+
+  public connectTo(scene: Scene) {
+    scene.add(this.threeObject);
+  }
+
+  protected getMaterial(color: EColor) {
+    return new MeshBasicMaterial({ color, wireframe: false });
+  }
+
+  private rotateCoordsOnAxis(axis: EAxis, angleDeg: number, n: number) {
     const angleInRadians = MathUtils.degToRad(-angleDeg);
     const bias = new Vector3(
       Math.floor((n - 1) / 2),
@@ -106,14 +129,6 @@ export class Cubie implements ISceneAttachable {
     const result = matriced.add(bias);
 
     return result;
-  }
-
-  public connectTo(scene: Scene) {
-    scene.add(this.threeObject);
-  }
-
-  protected getMaterial(color: EColor) {
-    return new MeshBasicMaterial({ color, wireframe: false });
   }
 }
 

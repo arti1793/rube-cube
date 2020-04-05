@@ -1,5 +1,5 @@
 import { Group, MathUtils, Mesh, Scene, Vector3 } from 'three';
-import { EAxis, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import { EAxis } from '../common/CommonConstants';
 import { ISceneAttachable } from '../common/CommonTypes';
 import { Cubie } from './Cubie';
 import { TopologyGenerator } from './TopologyGenerator';
@@ -99,12 +99,11 @@ export class CubeRube implements ISceneAttachable {
     return () => {
       this.scene.add(
         ...sliceOfCubies.map(cubie => {
-          cubie.threeObject.applyMatrix4(this.rotatingGroup.matrix);
-          cubie.meta.coords = cubie.rotateCoordsOnAxis(
+          cubie.applyRotationMatrix(this.rotatingGroup.matrix, {
             axis,
-            positive ? endDeg : -endDeg,
-            NUMBER_OF_CUBIES
-          );
+            deg: endDeg,
+            positive,
+          });
           return cubie.threeObject;
         })
       );
