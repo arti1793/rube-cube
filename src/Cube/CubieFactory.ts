@@ -74,6 +74,5 @@ export const CubieFactory: TCubieFactory = (
     }
   }
   const cubie = new CubieMultiColored(sideColorMap);
-  cubie.meta.colors = [...sideColorMap.values()];
   return cubie;
 };

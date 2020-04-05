@@ -67,6 +67,9 @@ export class Cubie implements ISceneAttachable {
   public connectTo(scene: Scene) {
     scene.add(this.threeObject);
   }
+  public setCoords(vector: Vector3) {
+    this.meta.coords = vector;
+  }
 
   protected getMaterial(color: EColor) {
     return new MeshBasicMaterial({ color, wireframe: false });
@@ -102,6 +105,7 @@ export class CubieMultiColored extends Cubie {
         ? this.getMaterial(sideColorMap.get(side))
         : material
     );
+    this.meta.colors = [...new Set(sideColorMap.values())];
     this.materials = materials;
     this.threeObject.material = this.materials;
   };

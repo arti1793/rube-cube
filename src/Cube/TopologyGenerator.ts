@@ -22,7 +22,7 @@ function CubieLocator(
   cubie.threeObject.translateY(yIndex * (cubie.shapeSize + gap) + bias);
   cubie.threeObject.translateZ(zIndex * (cubie.shapeSize + gap) + bias);
 
-  cubie.meta.coords = new Vector3(xIndex, yIndex, zIndex);
+  cubie.setCoords(new Vector3(xIndex, yIndex, zIndex));
   return cubie;
 }
 
