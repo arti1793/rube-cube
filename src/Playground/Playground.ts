@@ -6,7 +6,7 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { EColor, NUMBER_OF_CUBIES, EAxis } from '../common/CommonConstants';
+import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubeRube } from '../Cube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
 

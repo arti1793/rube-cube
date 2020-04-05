@@ -9,7 +9,7 @@ export class ManipulationController {
 
   private options = {
     angleList: [90, -90],
-    randomiseActionsCount: 20,
+    randomiseActionsCount: 50,
   };
   constructor(cubeRube: CubeRube) {
     this.cubeRube = cubeRube;
@@ -18,7 +18,7 @@ export class ManipulationController {
     const actions = this.generateRandomActions(
       this.options.randomiseActionsCount
     );
-    for (const [key, action] of Object.entries(actions)) {
+    for (const [key, action] of actions) {
       console.log(key);
       await action();
     }
@@ -41,7 +41,9 @@ export class ManipulationController {
     }
     return actions;
   }
-  private generateRandomActions(count: number) {
+  private generateRandomActions(
+    count: number
+  ): Array<[string, () => Promise<void>]> {
     const possibleActions = this.getActions();
     const randNumber = () =>
       Math.round(Math.random() * (Object.keys(possibleActions).length - 1));
@@ -49,9 +51,6 @@ export class ManipulationController {
     return new Array(count)
       .fill(null)
       .map(() => Object.keys(possibleActions)[randNumber()])
-      .reduce<IActions>((acc, key) => {
-        acc[key] = possibleActions[key];
-        return acc;
-      }, {});
+      .map(key => [key, possibleActions[key]]);
   }
 }
