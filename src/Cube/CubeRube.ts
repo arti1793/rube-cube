@@ -1,4 +1,4 @@
-import { Group, MathUtils, Mesh, Scene, Vector3 } from 'three';
+import { Group, MathUtils, Mesh, Scene } from 'three';
 import { EAxis } from '../common/CommonConstants';
 import { ISceneAttachable } from '../common/CommonTypes';
 import { Cubie } from './Cubie';
@@ -8,7 +8,7 @@ export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
   public rotatingGroup: Group;
 
-  private defaultStepInDegrees = 4;
+  private defaultStepInDegrees = 10;
   private scene: Scene;
 
   private clearGroup: () => void;
@@ -23,6 +23,7 @@ export class CubeRube implements ISceneAttachable {
   } | null = null;
 
   private cubiesLocated: Cubie[];
+  private resolver: () => void;
 
   constructor(n: number) {
     this.cubiesLocated = TopologyGenerator(n);
@@ -63,9 +64,16 @@ export class CubeRube implements ISceneAttachable {
     this.animationProgress.progressDeg += currentStep;
   };
 
-  public startAnimation(endDeg: number, axis: EAxis, sliceIndexByAxis: number) {
+  public startAnimation(
+    endDeg: number,
+    axis: EAxis,
+    sliceIndexByAxis: number
+  ): Promise<void> {
     if (endDeg % 90 !== 0) {
       throw new Error('rotation must be a multiple of 90');
+    }
+    if (this.animationProgress) {
+      throw new Error('animation now in progress');
     }
     this.animationProgress = {
       axis,
@@ -76,6 +84,9 @@ export class CubeRube implements ISceneAttachable {
       targetInDegrees: Math.abs(endDeg),
     };
     this.clearGroup = this.recombineRotatingElementsToGroup();
+    return new Promise(resolve => {
+      this.resolver = resolve;
+    });
   }
 
   private recombineRotatingElementsToGroup() {
@@ -115,6 +126,7 @@ export class CubeRube implements ISceneAttachable {
     ) {
       this.clearGroup();
       this.animationProgress = null;
+      this.resolver();
       return false;
     }
     return true;

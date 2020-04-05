@@ -6,8 +6,9 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import { EColor, NUMBER_OF_CUBIES, EAxis } from '../common/CommonConstants';
 import { CubeRube } from '../Cube/CubeRube';
+import { ManipulationController } from '../ManipulationController/ManipulationController';
 
 export class Playground {
   public scene = new Scene();
@@ -24,6 +25,7 @@ export class Playground {
   public axisHelper = new AxesHelper(500);
 
   public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
+  public manipulationController = new ManipulationController(this.cubeRube);
 
   private fpsInterval = 15;
 
@@ -42,6 +44,7 @@ export class Playground {
 
     /** mounting point */
     element.appendChild(this.renderer.domElement);
+    this.renderButtons();
 
     this.scene.matrixAutoUpdate = true;
     this.scene.autoUpdate = true;
@@ -57,6 +60,32 @@ export class Playground {
     this.camera.position.y = 8 * 100;
     this.camera.position.z = 8 * 100;
     this.camera.position.x = 8 * 100;
+  };
+
+  public renderButtons = () => {
+    const nList: number[] = new Array(NUMBER_OF_CUBIES)
+      .fill(null)
+      .map((_, index) => index);
+
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'fixed';
+    wrapper.style.bottom = '0';
+    for (const [, axis] of Object.entries(EAxis)) {
+      const wrapperAxis = document.createElement('div');
+
+      for (const index of nList) {
+        const button = document.createElement('button');
+        button.textContent = `${axis}_${index}`;
+        button.style.width = '100px';
+        button.style.height = '50px';
+        button.onclick = () => this.cubeRube.startAnimation(90, axis, index);
+        button.oncontextmenu = () =>
+          this.cubeRube.startAnimation(-90, axis, index);
+        wrapperAxis.append(button);
+      }
+      wrapper.append(wrapperAxis);
+    }
+    document.body.append(wrapper);
   };
 
   private startAnimating = (fps: number, sampleFreq: number = 500) => {
