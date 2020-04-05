@@ -8,12 +8,7 @@ export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
   public rotatingGroup: Group;
 
-  public axisRotationMap = {
-    [EAxis.x]: new Vector3(1, 0, 0),
-    [EAxis.y]: new Vector3(0, 1, 0),
-    [EAxis.z]: new Vector3(0, 0, 1),
-  };
-  private stepDeg = 4;
+  private defaultStepInDegrees = 4;
   private scene: Scene;
 
   private clearGroup: () => void;
@@ -21,10 +16,10 @@ export class CubeRube implements ISceneAttachable {
   private animationProgress: {
     progressDeg: number;
     positive: boolean;
-    stepDeg: number;
-    endDeg: number;
+    stepInDegrees: number;
+    targetInDegrees: number;
     axis: EAxis;
-    index: number;
+    sliceIndexByAxis: number;
   } | null = null;
 
   private cubiesLocated: Cubie[];
@@ -50,15 +45,15 @@ export class CubeRube implements ISceneAttachable {
   public rotate = () => {
     const {
       axis,
-      stepDeg,
-      endDeg,
+      stepInDegrees,
+      targetInDegrees,
       progressDeg,
       positive,
     } = this.animationProgress;
 
-    let currentStep = stepDeg;
-    if (progressDeg + stepDeg > endDeg) {
-      currentStep = endDeg - progressDeg;
+    let currentStep = stepInDegrees;
+    if (progressDeg + stepInDegrees > targetInDegrees) {
+      currentStep = targetInDegrees - progressDeg;
     }
     if (positive) {
       this.rotatingGroup.rotation[axis] += MathUtils.degToRad(currentStep);
@@ -68,26 +63,29 @@ export class CubeRube implements ISceneAttachable {
     this.animationProgress.progressDeg += currentStep;
   };
 
-  public startAnimation(endDeg: number, axis: EAxis, index: number) {
+  public startAnimation(endDeg: number, axis: EAxis, sliceIndexByAxis: number) {
+    if (endDeg % 90 !== 0) {
+      throw new Error('rotation must be a multiple of 90');
+    }
     this.animationProgress = {
       axis,
-      endDeg: Math.abs(endDeg),
-      index,
       positive: endDeg > 0,
       progressDeg: 0,
-      stepDeg: this.stepDeg,
+      sliceIndexByAxis,
+      stepInDegrees: this.defaultStepInDegrees,
+      targetInDegrees: Math.abs(endDeg),
     };
     this.clearGroup = this.recombineRotatingElementsToGroup();
   }
 
   private recombineRotatingElementsToGroup() {
-    const { axis, index, endDeg, positive } = this.animationProgress;
+    const { axis, sliceIndexByAxis } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
       ({
         meta: {
-          coords: { [axis]: ind },
+          coords: { [axis]: index },
         },
-      }) => ind === index
+      }) => index === sliceIndexByAxis
     );
     const cubiesThreeObjects = sliceOfCubies.map(cubie => cubie.threeObject);
 
@@ -99,11 +97,7 @@ export class CubeRube implements ISceneAttachable {
     return () => {
       this.scene.add(
         ...sliceOfCubies.map(cubie => {
-          cubie.applyRotationMatrix(this.rotatingGroup.matrix, {
-            axis,
-            deg: endDeg,
-            positive,
-          });
+          cubie.applyRotationMatrix(this.rotatingGroup.matrix);
           return cubie.threeObject;
         })
       );
@@ -115,7 +109,10 @@ export class CubeRube implements ISceneAttachable {
       return false;
     }
 
-    if (this.animationProgress.progressDeg >= this.animationProgress.endDeg) {
+    if (
+      this.animationProgress.progressDeg >=
+      this.animationProgress.targetInDegrees
+    ) {
       this.clearGroup();
       this.animationProgress = null;
       return false;

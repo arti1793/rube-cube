@@ -1,14 +1,12 @@
 import {
   BoxGeometry,
-  MathUtils,
-  Matrix3,
   Matrix4,
   Mesh,
   MeshBasicMaterial,
   Scene,
   Vector3,
 } from 'three';
-import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import { EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { ISceneAttachable } from '../common/CommonTypes';
 
 export enum ECubieSide {
@@ -19,35 +17,6 @@ export enum ECubieSide {
   front,
   back,
 }
-
-const rotationalMatrixX = (angle: number) => {
-  const matrix = new Matrix3();
-  matrix.elements = [
-    [1, 0, 0],
-    [0, Math.round(Math.cos(angle)), -Math.round(Math.sin(angle))],
-    [0, Math.round(Math.sin(angle)), Math.round(Math.cos(angle))],
-  ].flat(1);
-  return matrix;
-};
-const rotationalMatrixY = (angle: number) => {
-  const matrix = new Matrix3();
-  matrix.elements = [
-    [Math.round(Math.cos(angle)), 0, Math.round(Math.sin(angle))],
-    [0, 1, 0],
-    [-Math.round(Math.sin(angle)), 0, Math.round(Math.cos(angle))],
-  ].flat(1);
-  return matrix;
-};
-
-const rotationalMatrixZ = (angle: number) => {
-  const matrix = new Matrix3();
-  matrix.elements = [
-    [Math.round(Math.cos(angle)), -Math.round(Math.sin(angle)), 0],
-    [Math.round(Math.sin(angle)), Math.round(Math.cos(angle)), 0],
-    [0, 0, 1],
-  ].flat(1);
-  return matrix;
-};
 
 /** black cube with given size */
 export class Cubie implements ISceneAttachable {
@@ -70,12 +39,6 @@ export class Cubie implements ISceneAttachable {
     this.getMaterial(EColor.black),
   ];
 
-  private axisToRotationalMatrixMap = {
-    [EAxis.x]: rotationalMatrixX,
-    [EAxis.y]: rotationalMatrixY,
-    [EAxis.z]: rotationalMatrixZ,
-  };
-
   private geometry: BoxGeometry;
 
   constructor() {
@@ -90,18 +53,15 @@ export class Cubie implements ISceneAttachable {
     this.threeObject = new Mesh(this.geometry, this.materials);
   }
 
-  public applyRotationMatrix(
-    matrix: Matrix4,
-    options: { axis: EAxis; positive: boolean; deg: number }
-  ) {
+  /**
+   * keeps in sync `this.meta.coords` and actual position and rotation of threejs mesh
+   * @param matrix rotational matrix
+   */
+  public applyRotationMatrix(matrix: Matrix4) {
     // commits position of cubie saved in rotationGroup's matrix
     this.threeObject.applyMatrix4(matrix);
     // Updating coords metadata applying rotating matrix on biased index vectors
-    this.meta.coords = this.rotateCoordsOnAxis(
-      options.axis,
-      options.positive ? options.deg : -options.deg,
-      NUMBER_OF_CUBIES
-    );
+    this.meta.coords = this.rotateCoordsOnAxis(NUMBER_OF_CUBIES, matrix);
   }
 
   public connectTo(scene: Scene) {
@@ -112,8 +72,7 @@ export class Cubie implements ISceneAttachable {
     return new MeshBasicMaterial({ color, wireframe: false });
   }
 
-  private rotateCoordsOnAxis(axis: EAxis, angleDeg: number, n: number) {
-    const angleInRadians = MathUtils.degToRad(-angleDeg);
+  private rotateCoordsOnAxis(n: number, matrix: Matrix4) {
     const bias = new Vector3(
       Math.floor((n - 1) / 2),
       Math.floor((n - 1) / 2),
@@ -123,12 +82,10 @@ export class Cubie implements ISceneAttachable {
 
     const biased: Vector3 = cubieVector.sub(bias);
 
-    const matriced = biased.applyMatrix3(
-      this.axisToRotationalMatrixMap[axis](angleInRadians)
-    );
+    const matriced = biased.applyMatrix4(matrix);
     const result = matriced.add(bias);
 
-    return result;
+    return result.round();
   }
 }
 
