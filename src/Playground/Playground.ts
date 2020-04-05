@@ -85,6 +85,12 @@ export class Playground {
       }
       wrapper.append(wrapperAxis);
     }
+    const randomiseButton = document.createElement('button');
+    randomiseButton.textContent = 'randomise';
+    randomiseButton.style.width = '100px';
+    randomiseButton.style.height = '50px';
+    randomiseButton.onclick = () => this.manipulationController.randomise();
+    wrapper.append(randomiseButton);
     document.body.append(wrapper);
   };
 
