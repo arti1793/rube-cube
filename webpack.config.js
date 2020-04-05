@@ -48,11 +48,17 @@ module.exports = {
                 test: /\.ts$/,
                 exclude: [ /node_modules/ ],
                 use: 'awesome-typescript-loader'
-            }
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                loader: 'file-loader',
+            },
         ]
     },
 
     devtool: 'cheap-module-source-map',
-    devServer: {}
+    devServer: {
+        contentBase: path.resolve('./src/assets'),
+    }
 };
 
