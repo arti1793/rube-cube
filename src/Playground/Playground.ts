@@ -1,8 +1,15 @@
+import background from 'assets/background.jpg';
 import {
   AxesHelper,
   Color,
+  DoubleSide,
+  Mesh,
+  MeshBasicMaterial,
   PerspectiveCamera,
+  PlaneGeometry,
   Scene,
+  SpotLight,
+  TextureLoader,
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
@@ -41,6 +48,8 @@ export class Playground {
     /** viewport sizes */
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.setCameraPosition();
+    this.setEnvironment();
+    this.setLight();
 
     /** mounting point */
     element.appendChild(this.renderer.domElement);
@@ -54,13 +63,6 @@ export class Playground {
 
     this.startAnimating(this.fps);
   }
-
-  public setCameraPosition = () => {
-    /** camera position */
-    this.camera.position.y = 8 * 100;
-    this.camera.position.z = 8 * 100;
-    this.camera.position.x = 8 * 100;
-  };
 
   public renderButtons = () => {
     const nList: number[] = new Array(NUMBER_OF_CUBIES)
@@ -79,8 +81,10 @@ export class Playground {
         button.style.width = '100px';
         button.style.height = '50px';
         button.onclick = () => this.cubeRube.startAnimation(90, axis, index);
-        button.oncontextmenu = () =>
+        button.oncontextmenu = ev => {
+          ev.preventDefault();
           this.cubeRube.startAnimation(-90, axis, index);
+        };
         wrapperAxis.append(button);
       }
       wrapper.append(wrapperAxis);
@@ -92,6 +96,38 @@ export class Playground {
     randomiseButton.onclick = () => this.manipulationController.randomise();
     wrapper.append(randomiseButton);
     document.body.append(wrapper);
+  };
+
+  // TODO
+  private setLight() {
+    const frontSpot = new SpotLight(0xeeeece);
+    frontSpot.position.set(0, 0, 0);
+    this.scene.add(frontSpot);
+    const frontSpot2 = new SpotLight(0xddddce);
+    frontSpot.position.set(500, 500, 500);
+    this.scene.add(frontSpot2);
+  }
+
+  private setEnvironment() {
+    const loader = new TextureLoader();
+    const wallGeometry = new PlaneGeometry(6000, 6000, 2, 10);
+
+    const wallMaterial = new MeshBasicMaterial({
+      map: loader.load(background),
+      side: DoubleSide,
+    });
+
+    const wall = new Mesh(wallGeometry, wallMaterial);
+    wall.position.set(-500, -100, -500);
+    wall.rotateY(Math.PI / 4);
+    this.scene.add(wall);
+  }
+
+  private setCameraPosition = () => {
+    /** camera position */
+    this.camera.position.y = 10 * 100;
+    this.camera.position.z = 10 * 100;
+    this.camera.position.x = 10 * 100;
   };
 
   private startAnimating = (fps: number, sampleFreq: number = 500) => {

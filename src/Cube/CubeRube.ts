@@ -8,6 +8,8 @@ export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
   public rotatingGroup: Group;
 
+  public readonly cubiesLocated: Cubie[];
+
   private defaultStepInDegrees = 15;
   private scene: Scene;
 
@@ -21,8 +23,6 @@ export class CubeRube implements ISceneAttachable {
     axis: EAxis;
     sliceIndexByAxis: number;
   } | null = null;
-
-  private cubiesLocated: Cubie[];
   private resolver: () => void;
 
   constructor(n: number) {
