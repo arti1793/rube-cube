@@ -6,13 +6,18 @@ interface IActions {
 }
 export class ManipulationController {
   private cubeRube: CubeRube;
+
+  private options = {
+    angleList: [90, -90],
+    randomiseActionsCount: 20,
+  };
   constructor(cubeRube: CubeRube) {
     this.cubeRube = cubeRube;
   }
   public async randomise() {
-    const limit = 20;
-
-    const actions = this.generateRandomActions(limit);
+    const actions = this.generateRandomActions(
+      this.options.randomiseActionsCount
+    );
     for (const [key, action] of Object.entries(actions)) {
       console.log(key);
       await action();
@@ -24,11 +29,10 @@ export class ManipulationController {
       .fill(null)
       .map((_, index) => index);
 
-    const angleList: number[] = [90, -90];
     const actions: IActions = {};
 
     for (const [, axis] of Object.entries(EAxis)) {
-      for (const angle of angleList) {
+      for (const angle of this.options.angleList) {
         for (const index of nList) {
           actions[`${axis}{${index}} ${angle}`] = () =>
             this.cubeRube.startAnimation(angle, axis, index);

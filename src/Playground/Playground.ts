@@ -29,7 +29,7 @@ export class Playground {
 
   private fpsInterval = 15;
 
-  private fps = 30;
+  private fps = 40;
   private lastDrawTime: number;
   private frameCount: number;
   private lastSampleTime: number;

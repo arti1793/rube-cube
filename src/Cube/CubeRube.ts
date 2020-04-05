@@ -8,7 +8,7 @@ export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
   public rotatingGroup: Group;
 
-  private defaultStepInDegrees = 10;
+  private defaultStepInDegrees = 15;
   private scene: Scene;
 
   private clearGroup: () => void;
