@@ -1,4 +1,3 @@
-import { Vector3 } from 'three';
 import { CUBE_FACE_COLOR_MAP } from '../common/CommonConstants';
 import { Cubie } from './Cubie';
 import { CubieFactory, TCubieFactory } from './CubieFactory';
@@ -22,7 +21,6 @@ function CubieLocator(
   cubie.threeObject.translateY(yIndex * (cubie.shapeSize + gap) + bias);
   cubie.threeObject.translateZ(zIndex * (cubie.shapeSize + gap) + bias);
 
-  cubie.setCoords(new Vector3(xIndex, yIndex, zIndex));
   return cubie;
 }
 

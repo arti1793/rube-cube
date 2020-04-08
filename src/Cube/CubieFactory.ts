@@ -1,19 +1,19 @@
+import { Vector3 } from 'three';
 import {
   AXIS_EDGE_CUBE_SIDE_MAP,
-  CUBE_FACE_COLOR_MAP,
   CUBE_FACE_EDGE_TYPE_MAP,
   EAxis,
   EColor,
   ECubeFace,
   EEdgeType,
 } from '../common/CommonConstants';
-import { IAxisEdgeMap } from '../common/CommonTypes';
-import { Cubie, CubieMultiColored, ECubieSide } from './Cubie';
+import { IAxisEdgeMap, ICubieMeta } from '../common/CommonTypes';
+import { Cubie, CubieMultiColored } from './Cubie';
 
 export type TCubieFactory = (
   coords: { xIndex: number; yIndex: number; zIndex: number },
   n: number,
-  cubieFaceColorMap: Map<ECubeFace, EColor>
+  cubeFaceColorMap: Map<ECubeFace, EColor>
 ) => Cubie;
 
 const getCubeFace = (axis: EAxis, edgeType: EEdgeType) => {
@@ -50,7 +50,8 @@ const getAxisEdgeMap = (
 
 export const CubieFactory: TCubieFactory = (
   coords: { xIndex: number; yIndex: number; zIndex: number },
-  n: number
+  n: number,
+  cubeFaceColorMap
 ) => {
   const axisEdgeMap: IAxisEdgeMap = getAxisEdgeMap(
     coords.xIndex,
@@ -58,21 +59,24 @@ export const CubieFactory: TCubieFactory = (
     coords.zIndex,
     n
   );
-  const sideColorMap: Map<ECubieSide, EColor> = new Map([]);
+  const sideColorCubeFaceMap: ICubieMeta = {
+    coords: new Vector3(coords.xIndex, coords.yIndex, coords.zIndex),
+    sides: Object.entries(axisEdgeMap)
+      .map(([axis]) => {
+        const edgeType = axisEdgeMap[(axis as unknown) as EAxis];
+        return edgeType === null
+          ? undefined
+          : {
+              color: cubeFaceColorMap.get(
+                getCubeFace((axis as unknown) as EAxis, edgeType)
+              ),
+              cubeFace: getCubeFace((axis as unknown) as EAxis, edgeType),
+              side: AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType],
+            };
+      })
+      .filter(Boolean),
+  };
 
-  for (const [axis] of Object.entries(axisEdgeMap)) {
-    const edgeType = axisEdgeMap[(axis as unknown) as EAxis];
-    if (edgeType !== null) {
-      const side = AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType];
-
-      sideColorMap.set(
-        side,
-        CUBE_FACE_COLOR_MAP.get(
-          getCubeFace((axis as unknown) as EAxis, edgeType)
-        )
-      );
-    }
-  }
-  const cubie = new CubieMultiColored(sideColorMap);
+  const cubie = new CubieMultiColored(sideColorCubeFaceMap);
   return cubie;
 };

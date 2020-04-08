@@ -7,7 +7,11 @@ import {
   Vector3,
 } from 'three';
 import { EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
-import { ISceneAttachable } from '../common/CommonTypes';
+import {
+  ICubieMeta,
+  ISceneAttachable,
+  ISidesMeta,
+} from '../common/CommonTypes';
 
 export enum ECubieSide {
   right,
@@ -24,10 +28,7 @@ export class Cubie implements ISceneAttachable {
 
   public threeObject: Mesh;
 
-  public meta: {
-    coords?: Vector3;
-    colors?: EColor[];
-  } = {};
+  public meta: Partial<ICubieMeta> = {};
 
   // all the cubes are black from the start
   protected materials = [
@@ -94,18 +95,21 @@ export class Cubie implements ISceneAttachable {
 
 // tslint:disable-next-line: max-classes-per-file
 export class CubieMultiColored extends Cubie {
-  constructor(sideColorMap: Map<ECubieSide, EColor>) {
+  constructor(sidesMeta: ICubieMeta) {
     super();
-    this.changeSideColors(sideColorMap);
+    this.changeSideColors(sidesMeta);
   }
 
-  public changeSideColors = (sideColorMap: Map<ECubieSide, EColor>) => {
-    const materials = this.materials.map((material, side) =>
-      sideColorMap.has(side)
-        ? this.getMaterial(sideColorMap.get(side))
-        : material
-    );
-    this.meta.colors = [...new Set(sideColorMap.values())];
+  public changeSideColors = (sidesMeta: ICubieMeta) => {
+    const materials = this.materials.map((material, side) => {
+      const sideDescription: ISidesMeta = sidesMeta.sides.find(
+        (metaSide) => side === metaSide.side
+      );
+      return sideDescription
+        ? this.getMaterial(sideDescription.color)
+        : material;
+    });
+    this.meta = sidesMeta;
     this.materials = materials;
     this.threeObject.material = this.materials;
   };

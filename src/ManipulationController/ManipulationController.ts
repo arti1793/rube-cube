@@ -23,30 +23,30 @@ export class ManipulationController {
       await action();
     }
   }
-  public isComplete() {
-    const colors = [
-      ...new Set(
-        this.cubeRube.cubiesLocated.map(({ meta }) => meta.colors).flat(1)
-      ),
-    ].every(color => {
-      const colorsCoords = this.cubeRube.cubiesLocated
-        .filter(({ meta }) => meta.colors.includes(color))
-        .map(({ meta }) => meta.coords);
-      const coordsSetByAxis = new Map<EAxis, Set<number>>([
-        [EAxis.x, new Set(colorsCoords.map(({ x }) => x))],
-        [EAxis.y, new Set(colorsCoords.map(({ y }) => y))],
-        [EAxis.z, new Set(colorsCoords.map(({ z }) => z))],
-      ]);
+  // public isComplete() {
+  //   const colors = [
+  //     ...new Set(
+  //       this.cubeRube.cubiesLocated.map(({ meta: meta }) => meta.colors).flat(1)
+  //     ),
+  //   ].every(color => {
+  //     const colorsCoords = this.cubeRube.cubiesLocated
+  //       .filter(({ meta: meta }) => meta.colors.includes(color))
+  //       .map(({ meta: meta }) => meta.coords);
+  //     const coordsSetByAxis = new Map<EAxis, Set<number>>([
+  //       [EAxis.x, new Set(colorsCoords.map(({ x }) => x))],
+  //       [EAxis.y, new Set(colorsCoords.map(({ y }) => y))],
+  //       [EAxis.z, new Set(colorsCoords.map(({ z }) => z))],
+  //     ]);
 
-      // intersection
-      return (
-        [...coordsSetByAxis.get(EAxis.x)]
-          .filter(el => coordsSetByAxis.get(EAxis.y).has(el))
-          .filter(el => coordsSetByAxis.get(EAxis.z).has(el)).length === 1
-      );
-    });
-    return colors;
-  }
+  //     // intersection
+  //     return (
+  //       [...coordsSetByAxis.get(EAxis.x)]
+  //         .filter(el => coordsSetByAxis.get(EAxis.y).has(el))
+  //         .filter(el => coordsSetByAxis.get(EAxis.z).has(el)).length === 1
+  //     );
+  //   });
+  //   return colors;
+  // }
 
   private getActions() {
     const nList: number[] = new Array(NUMBER_OF_CUBIES)
@@ -75,6 +75,6 @@ export class ManipulationController {
     return new Array(count)
       .fill(null)
       .map(() => Object.keys(possibleActions)[randNumber()])
-      .map(key => [key, possibleActions[key]]);
+      .map((key) => [key, possibleActions[key]]);
   }
 }

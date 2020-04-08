@@ -84,7 +84,7 @@ export class CubeRube implements ISceneAttachable {
       targetInDegrees: Math.abs(endDeg),
     };
     this.clearGroup = this.recombineRotatingElementsToGroup();
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       this.resolver = resolve;
     });
   }
@@ -98,7 +98,7 @@ export class CubeRube implements ISceneAttachable {
         },
       }) => index === sliceIndexByAxis
     );
-    const cubiesThreeObjects = sliceOfCubies.map(cubie => cubie.threeObject);
+    const cubiesThreeObjects = sliceOfCubies.map((cubie) => cubie.threeObject);
 
     this.rotatingGroup = new Group();
 
@@ -107,7 +107,7 @@ export class CubeRube implements ISceneAttachable {
 
     return () => {
       this.scene.add(
-        ...sliceOfCubies.map(cubie => {
+        ...sliceOfCubies.map((cubie) => {
           cubie.applyRotationMatrix(this.rotatingGroup.matrix);
           return cubie.threeObject;
         })
