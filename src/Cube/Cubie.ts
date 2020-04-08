@@ -61,15 +61,13 @@ export class Cubie implements ISceneAttachable {
   public applyRotationMatrix(matrix: Matrix4) {
     // commits position of cubie saved in rotationGroup's matrix
     this.threeObject.applyMatrix4(matrix);
+    // TODO: actualise cube face data
     // Updating coords metadata applying rotating matrix on biased index vectors
     this.meta.coords = this.rotateCoordsOnAxis(NUMBER_OF_CUBIES, matrix);
   }
 
   public connectTo(scene: Scene) {
     scene.add(this.threeObject);
-  }
-  public setCoords(vector: Vector3) {
-    this.meta.coords = vector;
   }
 
   protected getMaterial(color: EColor) {
