@@ -1,5 +1,5 @@
 import { CUBE_FACE_COLOR_MAP } from '../common/CommonConstants';
-import { Cubie } from './Cubie';
+import { Cubie } from './Cubie/Cubie';
 import { CubieFactory, TCubieFactory } from './CubieFactory';
 
 function CubieLocator(

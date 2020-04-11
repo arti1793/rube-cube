@@ -1,4 +1,4 @@
-import { ECubieSide } from '../Cube/Cubie';
+import { ECubieSide } from '../Cubes/Cubie/Cubie';
 export const NUMBER_OF_CUBIES = 3;
 export enum EColor {
   red = 0xff0000,

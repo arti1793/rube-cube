@@ -1,5 +1,5 @@
 import { Group, Mesh, Scene, Vector3 } from 'three';
-import { ECubieSide } from '../Cube/Cubie';
+import { ECubieSide } from '../Cubes/Cubie/Cubie';
 import { EAxis, EColor, ECubeFace, EEdgeType } from './CommonConstants';
 
 export interface IAxisEdgeMap {

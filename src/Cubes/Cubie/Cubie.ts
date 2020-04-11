@@ -6,12 +6,12 @@ import {
   Scene,
   Vector3,
 } from 'three';
-import { EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import { EColor, NUMBER_OF_CUBIES, EAxis } from '../../common/CommonConstants';
 import {
   ICubieMeta,
   ISceneAttachable,
   ISidesMeta,
-} from '../common/CommonTypes';
+} from '../../common/CommonTypes';
 
 export enum ECubieSide {
   right,
@@ -58,12 +58,18 @@ export class Cubie implements ISceneAttachable {
    * keeps in sync `this.meta.coords` and actual position and rotation of threejs mesh
    * @param matrix rotational matrix
    */
-  public applyRotationMatrix(matrix: Matrix4) {
+  public applyRotationMatrix(
+    matrix: Matrix4,
+    rotationOptions: {
+      axis: EAxis;
+      sliceIndexByAxis: number;
+      angleInDegrees: number;
+    }
+  ) {
     // commits position of cubie saved in rotationGroup's matrix
     this.threeObject.applyMatrix4(matrix);
     // TODO: actualise cube face data
-    // Updating coords metadata applying rotating matrix on biased index vectors
-    this.meta.coords = this.rotateCoordsOnAxis(NUMBER_OF_CUBIES, matrix);
+    this.rotateMetaOnAxis(NUMBER_OF_CUBIES, matrix, rotationOptions);
   }
 
   public connectTo(scene: Scene) {
@@ -74,7 +80,15 @@ export class Cubie implements ISceneAttachable {
     return new MeshBasicMaterial({ color, wireframe: false });
   }
 
-  private rotateCoordsOnAxis(n: number, matrix: Matrix4) {
+  private rotateMetaOnAxis(
+    n: number,
+    matrix: Matrix4,
+    rotationOptions: {
+      axis: EAxis;
+      sliceIndexByAxis: number;
+      angleInDegrees: number;
+    }
+  ) {
     const bias = new Vector3(
       Math.floor((n - 1) / 2),
       Math.floor((n - 1) / 2),
@@ -87,7 +101,13 @@ export class Cubie implements ISceneAttachable {
     const matriced = biased.applyMatrix4(matrix);
     const result = matriced.add(bias);
 
-    return result.round();
+    this.meta.coords = result.round();
+
+    // axis = x
+    //   this.meta.sides = this.meta.sides.map((side) => {
+    //  side.
+    //     return null;
+    //   })
   }
 }
 

@@ -1,8 +1,8 @@
 import { Group, MathUtils, Mesh, Scene } from 'three';
-import { EAxis } from '../common/CommonConstants';
-import { ISceneAttachable } from '../common/CommonTypes';
-import { Cubie } from './Cubie';
-import { TopologyGenerator } from './TopologyGenerator';
+import { EAxis } from '../../common/CommonConstants';
+import { ISceneAttachable } from '../../common/CommonTypes';
+import { Cubie } from '../Cubie/Cubie';
+import { TopologyGenerator } from '../TopologyGenerator';
 
 export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
@@ -17,7 +17,7 @@ export class CubeRube implements ISceneAttachable {
 
   private animationProgress: {
     progressDeg: number;
-    positive: boolean;
+    isPositive: boolean;
     stepInDegrees: number;
     targetInDegrees: number;
     axis: EAxis;
@@ -49,7 +49,7 @@ export class CubeRube implements ISceneAttachable {
       stepInDegrees,
       targetInDegrees,
       progressDeg,
-      positive,
+      isPositive: positive,
     } = this.animationProgress;
 
     let currentStep = stepInDegrees;
@@ -77,7 +77,7 @@ export class CubeRube implements ISceneAttachable {
     }
     this.animationProgress = {
       axis,
-      positive: endDeg > 0,
+      isPositive: endDeg > 0,
       progressDeg: 0,
       sliceIndexByAxis,
       stepInDegrees: this.defaultStepInDegrees,
@@ -90,7 +90,12 @@ export class CubeRube implements ISceneAttachable {
   }
 
   private recombineRotatingElementsToGroup() {
-    const { axis, sliceIndexByAxis } = this.animationProgress;
+    const {
+      axis,
+      sliceIndexByAxis,
+      targetInDegrees,
+      isPositive,
+    } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
       ({
         meta: {
@@ -108,7 +113,11 @@ export class CubeRube implements ISceneAttachable {
     return () => {
       this.scene.add(
         ...sliceOfCubies.map((cubie) => {
-          cubie.applyRotationMatrix(this.rotatingGroup.matrix);
+          cubie.applyRotationMatrix(this.rotatingGroup.matrix, {
+            axis,
+            sliceIndexByAxis,
+            angleInDegrees: isPositive ? targetInDegrees : -targetInDegrees,
+          });
           return cubie.threeObject;
         })
       );
