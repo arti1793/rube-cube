@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["node", "webgl2", "offscreencanvas"],
+    "types": ["node", "webgl2", "offscreencanvas", "jest", "mocha"],
     "lib": ["dom", "esnext"],
     "outDir": "./dist/",
     "sourceMap": true,
@@ -14,5 +14,6 @@
     "skipLibCheck": true,
     "noUnusedLocals": true
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["**/__*__.test.ts"]
 }

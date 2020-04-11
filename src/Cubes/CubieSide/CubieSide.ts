@@ -1,6 +1,5 @@
 import { Matrix4, Vector3 } from 'three';
-import { EColor, ECubeFace } from '../../common/CommonConstants';
-import { ECubieSide } from '../Cubie/Cubie';
+import { EColor, ECubeFace, ECubieSide } from '../../common/CommonConstants';
 
 const SideVectorMap: Map<ECubieSide, Vector3> = new Map([
   [ECubieSide.top, new Vector3(0, 1, 0)],
@@ -20,18 +19,16 @@ const CubeFaceVectorMap: Map<ECubeFace, Vector3> = new Map([
   [ECubeFace.backRight, new Vector3(0, 0, -1)],
 ]);
 
+/**
+ * Cubieside. stores face of cube, cubie side and color. face of cube and cubie side are actialising by "rotate()" method
+ */
 export class CubieSide {
   public readonly color: EColor;
   public side: ECubieSide;
   public face: ECubeFace;
   private vector: Vector3;
 
-  constructor(
-    color: EColor,
-    side: ECubieSide,
-    face: ECubeFace,
-    coords: Vector3
-  ) {
+  constructor(color: EColor, side: ECubieSide, face: ECubeFace) {
     this.color = color;
     this.side = side;
     this.face = face;
@@ -39,7 +36,7 @@ export class CubieSide {
   }
 
   public rotate(matrix: Matrix4) {
-    const newVector = this.vector.clone().applyMatrix4(matrix);
+    const newVector = this.vector.clone().applyMatrix4(matrix).round();
 
     const [newSide] = [...SideVectorMap.entries()].find(([, v]) =>
       v.equals(newVector)

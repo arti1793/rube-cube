@@ -1,4 +1,3 @@
-import { ECubieSide } from '../Cubes/Cubie/Cubie';
 export const NUMBER_OF_CUBIES = 3;
 export enum EColor {
   red = 0xff0000,
@@ -25,6 +24,18 @@ export enum ECubeFace {
 
   backLeft = 'backLeft',
   backRight = 'backRight',
+}
+
+/**
+ * viewer is on z+ axis for enum
+ */
+export enum ECubieSide {
+  right,
+  left,
+  top,
+  bottom,
+  front,
+  back,
 }
 
 export enum EAxis {

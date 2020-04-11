@@ -1,5 +1,5 @@
 import { Group, MathUtils, Mesh, Scene } from 'three';
-import { EAxis } from '../../common/CommonConstants';
+import { EAxis, ECubeFace } from '../../common/CommonConstants';
 import { ISceneAttachable } from '../../common/CommonTypes';
 import { Cubie } from '../Cubie/Cubie';
 import { TopologyGenerator } from '../TopologyGenerator';
@@ -30,6 +30,19 @@ export class CubeRube implements ISceneAttachable {
     this.threeObject = [
       ...this.cubiesLocated.map(({ threeObject }) => threeObject),
     ];
+  }
+
+  public showCubeMeta() {
+    const info = Object.entries(ECubeFace)
+      .map(([face]) => ({
+        [face]: this.cubiesLocated
+          .map((cubie) => cubie.meta.sides.filter((side) => side.face === face))
+          .flat(1)
+          .map((side) => [side.face, side.color]),
+      }))
+      .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+    // tslint:disable-next-line: no-console
+    console.log(info);
   }
 
   public connectTo(scene: Scene) {
@@ -90,12 +103,7 @@ export class CubeRube implements ISceneAttachable {
   }
 
   private recombineRotatingElementsToGroup() {
-    const {
-      axis,
-      sliceIndexByAxis,
-      targetInDegrees,
-      isPositive,
-    } = this.animationProgress;
+    const { axis, sliceIndexByAxis } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
       ({
         meta: {
@@ -113,11 +121,7 @@ export class CubeRube implements ISceneAttachable {
     return () => {
       this.scene.add(
         ...sliceOfCubies.map((cubie) => {
-          cubie.applyRotationMatrix(this.rotatingGroup.matrix, {
-            axis,
-            sliceIndexByAxis,
-            angleInDegrees: isPositive ? targetInDegrees : -targetInDegrees,
-          });
+          cubie.applyRotationMatrix(this.rotatingGroup.matrix);
           return cubie.threeObject;
         })
       );

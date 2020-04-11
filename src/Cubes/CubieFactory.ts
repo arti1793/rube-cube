@@ -8,6 +8,7 @@ import {
 import { IAxisEdgeMap, ICubieMeta } from '../common/CommonTypes';
 import { getAxisEdgeMap, getCubeFace } from '../common/utils';
 import { Cubie, CubieMultiColored } from './Cubie/Cubie';
+import { CubieSide } from './CubieSide/CubieSide';
 
 export type TCubieFactory = (
   coords: { xIndex: number; yIndex: number; zIndex: number },
@@ -31,13 +32,13 @@ export const CubieFactory: TCubieFactory = (
         const edgeType = axisEdgeMap[(axis as unknown) as EAxis];
         return edgeType === null
           ? undefined
-          : {
-              color: cubeFaceColorMap.get(
+          : new CubieSide(
+              cubeFaceColorMap.get(
                 getCubeFace((axis as unknown) as EAxis, edgeType)
               ),
-              cubeFace: getCubeFace((axis as unknown) as EAxis, edgeType),
-              side: AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType],
-            };
+              AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType],
+              getCubeFace((axis as unknown) as EAxis, edgeType)
+            );
       })
       .filter(Boolean),
   };

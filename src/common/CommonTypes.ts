@@ -1,5 +1,5 @@
 import { Group, Mesh, Scene, Vector3 } from 'three';
-import { ECubieSide } from '../Cubes/Cubie/Cubie';
+import { CubieSide } from '../Cubes/CubieSide/CubieSide';
 import { EAxis, EColor, ECubeFace, EEdgeType } from './CommonConstants';
 
 export interface IAxisEdgeMap {
@@ -8,14 +8,9 @@ export interface IAxisEdgeMap {
   [EAxis.z]: EEdgeType;
 }
 
-export interface ISidesMeta {
-  side: ECubieSide;
-  cubeFace: ECubeFace;
-  color: EColor;
-}
 export interface ICubieMeta {
   coords: Vector3;
-  sides: ISidesMeta[];
+  sides: CubieSide[];
 }
 export type TThreeObject = Group | Mesh | Mesh[] | Group[];
 

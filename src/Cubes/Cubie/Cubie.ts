@@ -6,21 +6,9 @@ import {
   Scene,
   Vector3,
 } from 'three';
-import { EColor, NUMBER_OF_CUBIES, EAxis } from '../../common/CommonConstants';
-import {
-  ICubieMeta,
-  ISceneAttachable,
-  ISidesMeta,
-} from '../../common/CommonTypes';
-
-export enum ECubieSide {
-  right,
-  left,
-  top,
-  bottom,
-  front,
-  back,
-}
+import { EColor, NUMBER_OF_CUBIES } from '../../common/CommonConstants';
+import { ICubieMeta, ISceneAttachable } from '../../common/CommonTypes';
+import { CubieSide } from '../CubieSide/CubieSide';
 
 /** black cube with given size */
 export class Cubie implements ISceneAttachable {
@@ -58,18 +46,11 @@ export class Cubie implements ISceneAttachable {
    * keeps in sync `this.meta.coords` and actual position and rotation of threejs mesh
    * @param matrix rotational matrix
    */
-  public applyRotationMatrix(
-    matrix: Matrix4,
-    rotationOptions: {
-      axis: EAxis;
-      sliceIndexByAxis: number;
-      angleInDegrees: number;
-    }
-  ) {
+  public applyRotationMatrix(matrix: Matrix4) {
     // commits position of cubie saved in rotationGroup's matrix
     this.threeObject.applyMatrix4(matrix);
     // TODO: actualise cube face data
-    this.rotateMetaOnAxis(NUMBER_OF_CUBIES, matrix, rotationOptions);
+    this.rotateMetaOnAxis(NUMBER_OF_CUBIES, matrix);
   }
 
   public connectTo(scene: Scene) {
@@ -80,15 +61,7 @@ export class Cubie implements ISceneAttachable {
     return new MeshBasicMaterial({ color, wireframe: false });
   }
 
-  private rotateMetaOnAxis(
-    n: number,
-    matrix: Matrix4,
-    rotationOptions: {
-      axis: EAxis;
-      sliceIndexByAxis: number;
-      angleInDegrees: number;
-    }
-  ) {
+  private rotateMetaOnAxis(n: number, matrix: Matrix4) {
     const bias = new Vector3(
       Math.floor((n - 1) / 2),
       Math.floor((n - 1) / 2),
@@ -103,11 +76,7 @@ export class Cubie implements ISceneAttachable {
 
     this.meta.coords = result.round();
 
-    // axis = x
-    //   this.meta.sides = this.meta.sides.map((side) => {
-    //  side.
-    //     return null;
-    //   })
+    this.meta.sides.forEach((side) => side.rotate(matrix));
   }
 }
 
@@ -120,8 +89,8 @@ export class CubieMultiColored extends Cubie {
 
   public changeSideColors = (sidesMeta: ICubieMeta) => {
     const materials = this.materials.map((material, side) => {
-      const sideDescription: ISidesMeta = sidesMeta.sides.find(
-        (metaSide) => side === metaSide.side
+      const sideDescription: CubieSide = sidesMeta.sides.find(
+        (cubieSide) => side === cubieSide.side
       );
       return sideDescription
         ? this.getMaterial(sideDescription.color)
