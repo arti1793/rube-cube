@@ -8,7 +8,7 @@ export class Algorithm {
     const visitedNodes: Map<string, Node> = new Map([
       [node.identifierKey, node],
     ]);
-    while (!node.isComplete() && node) {
+    while (!node.areTopsComplete() && node) {
       const newNodes = this.createNodesFrom(node, visitedNodes);
       newNodes.forEach((newNode) =>
         visitedNodes.set(newNode.identifierKey, newNode)

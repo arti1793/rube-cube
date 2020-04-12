@@ -26,17 +26,19 @@ export class CubieSide {
   public readonly color: EColor;
   public side: ECubieSide;
   public face: ECubeFace;
-  private vector: Vector3;
 
   constructor(color: EColor, side: ECubieSide, face: ECubeFace) {
     this.color = color;
     this.side = side;
     this.face = face;
-    this.vector = SideVectorMap.get(side).clone();
   }
 
   public rotate(matrix: Matrix4) {
-    const newVector = this.vector.clone().applyMatrix4(matrix).round();
+    const newVector = SideVectorMap.get(this.side)
+      .clone()
+      .clone()
+      .applyMatrix4(matrix)
+      .round();
 
     const [newSide] = [...SideVectorMap.entries()].find(([, v]) =>
       v.equals(newVector)
@@ -48,6 +50,5 @@ export class CubieSide {
 
     this.face = newFace;
     this.side = newSide;
-    this.vector = newVector;
   }
 }
