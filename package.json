@@ -33,6 +33,7 @@
     "@types/offscreencanvas": "^2019.6.2",
     "@types/webgl2": "0.0.5",
     "awesome-typescript-loader": "5.2.0",
+    "core-js": "^3.6.5",
     "file-loader": "^6.0.0",
     "jest": "^25.3.0",
     "source-map-loader": "0.2.3",
