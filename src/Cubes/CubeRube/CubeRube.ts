@@ -1,5 +1,9 @@
 import { Group, MathUtils, Mesh, Scene } from 'three';
-import { EAxis, ECubeFace } from '../../common/CommonConstants';
+import {
+  EAxis,
+  ECubeFace,
+  NUMBER_OF_CUBIES,
+} from '../../common/CommonConstants';
 import { ISceneAttachable } from '../../common/CommonTypes';
 import { Cubie } from '../Cubie/Cubie';
 import { TopologyGenerator } from '../TopologyGenerator';
@@ -107,7 +111,8 @@ export class CubeRube implements ISceneAttachable {
   private recombineRotatingElementsToGroup() {
     const { axis, sliceIndexByAxis } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
-      ({ coords: { [axis]: index } }) => index === sliceIndexByAxis
+      ({ coords: { [axis]: index } }) =>
+        index === sliceIndexByAxis - Math.floor(NUMBER_OF_CUBIES / 2)
     );
     const cubiesThreeObjects = sliceOfCubies.map((cubie) => cubie.threeObject);
 

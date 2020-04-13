@@ -1,5 +1,5 @@
 import { MathUtils, Matrix4, Vector3 } from 'three';
-import { EAxis, NUMBER_OF_CUBIES } from '../../common/CommonConstants';
+import { EAxis } from '../../common/CommonConstants';
 import { ICubieMeta } from '../../common/CommonTypes';
 import { CubieSide } from '../CubieSide/CubieSide';
 
@@ -13,17 +13,17 @@ export class CubieMeta implements ICubieMeta {
   }
 
   public rotateMatrix4(rotationalMatrix: Matrix4) {
-    const bias = new Vector3(
-      Math.floor((NUMBER_OF_CUBIES - 1) / 2),
-      Math.floor((NUMBER_OF_CUBIES - 1) / 2),
-      Math.floor((NUMBER_OF_CUBIES - 1) / 2)
-    );
+    // const bias = new Vector3(
+    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2),
+    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2),
+    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2)
+    // );
     return new CubieMeta({
       coords: this.coords
         .clone()
-        .sub(bias)
+        // .sub(bias)
         .applyMatrix4(rotationalMatrix)
-        .add(bias)
+        // .add(bias)
         .round(),
       sides: this.sides.map((side) => side.rotate(rotationalMatrix)),
     });

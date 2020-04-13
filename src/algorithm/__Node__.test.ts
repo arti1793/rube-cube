@@ -12,7 +12,7 @@ import { Node } from './Node';
 const serializer = (
   nodes: Array<{
     coords: { x: number; y: number; z: number };
-    sides: Array<{ side: ECubieSide; color: EColor; face: ECubeFace }>;
+    sides: Array<{ side: ECubieSide; color: EColor; face: string }>;
   }>
 ) => {
   return nodes.map(

@@ -27,7 +27,11 @@ export const CubieFactory: TCubieFactory = (
     n
   );
   const cubieMeta = new CubieMeta({
-    coords: new Vector3(coords.xIndex, coords.yIndex, coords.zIndex),
+    coords: new Vector3(
+      coords.xIndex - Math.floor(n / 2),
+      coords.yIndex - Math.floor(n / 2),
+      coords.zIndex - Math.floor(n / 2)
+    ),
     sides: Object.entries(axisEdgeMap)
       .map(([axis]) => {
         const edgeType = axisEdgeMap[(axis as unknown) as EAxis];

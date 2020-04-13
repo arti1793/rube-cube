@@ -4,7 +4,6 @@ import {
   EColor,
   ECubeFace,
   ECubieSide,
-  NUMBER_OF_CUBIES,
 } from '../../common/CommonConstants';
 import { CubieSide } from '../CubieSide/CubieSide';
 import { CubieMeta } from './CubieMeta';
@@ -26,7 +25,18 @@ test("cubieMeta should rotate cubie's coords", () => {
 
   const newCubie = cubie.rotate(EAxis.x, 90);
   expect(newCubie).toBeInstanceOf(CubieMeta);
-  expect(newCubie.coords).toEqual(new Vector3(0, NUMBER_OF_CUBIES - 1, 0));
+  expect(newCubie.coords).toEqual(new Vector3(0, 0, 0));
+});
+
+test("cubieMeta should rotate cubie's coords 2", () => {
+  const cubie = new CubieMeta({
+    coords: new Vector3(1, 1, 1),
+    sides: [new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backLeft)],
+  });
+
+  const newCubie = cubie.rotate(EAxis.x, 90);
+  expect(newCubie).toBeInstanceOf(CubieMeta);
+  expect(newCubie.coords).toEqual(new Vector3(1, -1, 1));
 });
 
 test("cubieMeta should rotate by X cubie' sides", () => {
