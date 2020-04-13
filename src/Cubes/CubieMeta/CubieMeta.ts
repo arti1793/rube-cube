@@ -2,21 +2,34 @@ import { MathUtils, Matrix4, Vector3 } from 'three';
 import { EAxis, NUMBER_OF_CUBIES } from '../../common/CommonConstants';
 import { ICubieMeta } from '../../common/CommonTypes';
 import { CubieSide } from '../CubieSide/CubieSide';
+
 export class CubieMeta implements ICubieMeta {
   public coords: Vector3;
-  public readonly sides: CubieSide[];
+  public sides: CubieSide[];
 
   constructor(meta: ICubieMeta) {
     this.coords = meta.coords;
     this.sides = meta.sides;
   }
 
-  public rotate(axis: EAxis, angle: number) {
+  public rotateMatrix4(rotationalMatrix: Matrix4) {
     const bias = new Vector3(
       Math.floor((NUMBER_OF_CUBIES - 1) / 2),
       Math.floor((NUMBER_OF_CUBIES - 1) / 2),
       Math.floor((NUMBER_OF_CUBIES - 1) / 2)
     );
+    return new CubieMeta({
+      coords: this.coords
+        .clone()
+        .sub(bias)
+        .applyMatrix4(rotationalMatrix)
+        .add(bias)
+        .round(),
+      sides: this.sides.map((side) => side.rotate(rotationalMatrix)),
+    });
+  }
+
+  public rotate(axis: EAxis, angle: number) {
     let pivot: Vector3;
     if (axis === EAxis.x) {
       pivot = new Vector3(1, 0, 0);
@@ -31,12 +44,7 @@ export class CubieMeta implements ICubieMeta {
       pivot,
       MathUtils.degToRad(angle)
     );
-    this.sides.forEach((side) => side.rotate(rotationalMatrix));
-    this.coords = this.coords
-      .clone()
-      .sub(bias)
-      .applyMatrix4(rotationalMatrix)
-      .add(bias)
-      .round();
+
+    return this.rotateMatrix4(rotationalMatrix);
   }
 }

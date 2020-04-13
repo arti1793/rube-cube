@@ -24,9 +24,9 @@ test("cubieMeta should rotate cubie's coords", () => {
     sides: [new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backLeft)],
   });
 
-  cubie.rotate(EAxis.x, 90);
-  expect(cubie).toBeInstanceOf(CubieMeta);
-  expect(cubie.coords).toEqual(new Vector3(0, NUMBER_OF_CUBIES - 1, 0));
+  const newCubie = cubie.rotate(EAxis.x, 90);
+  expect(newCubie).toBeInstanceOf(CubieMeta);
+  expect(newCubie.coords).toEqual(new Vector3(0, NUMBER_OF_CUBIES - 1, 0));
 });
 
 test("cubieMeta should rotate by X cubie' sides", () => {
@@ -35,9 +35,9 @@ test("cubieMeta should rotate by X cubie' sides", () => {
     sides: [new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backLeft)],
   });
 
-  cubie.rotate(EAxis.x, 90);
-  expect(cubie).toBeInstanceOf(CubieMeta);
-  expect(cubie.sides[0]).toEqual(
+  const newCubie = cubie.rotate(EAxis.x, 90);
+  expect(newCubie).toBeInstanceOf(CubieMeta);
+  expect(newCubie.sides[0]).toEqual(
     new CubieSide(EColor.yellow, ECubieSide.top, ECubeFace.top)
   );
 });
@@ -48,9 +48,9 @@ test("cubieMeta should rotate by Y cubie' sides", () => {
     sides: [new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backLeft)],
   });
 
-  cubie.rotate(EAxis.y, 90);
-  expect(cubie).toBeInstanceOf(CubieMeta);
-  expect(cubie.sides[0]).toEqual(
+  const newCubie = cubie.rotate(EAxis.y, 90);
+  expect(newCubie).toBeInstanceOf(CubieMeta);
+  expect(newCubie.sides[0]).toEqual(
     new CubieSide(EColor.yellow, ECubieSide.left, ECubeFace.backLeft)
   );
 });
@@ -61,9 +61,9 @@ test("cubieMeta should rotate by Z cubie' sides", () => {
     sides: [new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backLeft)],
   });
 
-  cubie.rotate(EAxis.z, 90);
-  expect(cubie).toBeInstanceOf(CubieMeta);
-  expect(cubie.sides[0]).toEqual(
+  const newCubie = cubie.rotate(EAxis.z, 90);
+  expect(newCubie).toBeInstanceOf(CubieMeta);
+  expect(newCubie.sides[0]).toEqual(
     new CubieSide(EColor.yellow, ECubieSide.back, ECubeFace.backRight)
   );
 });

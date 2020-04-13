@@ -35,10 +35,12 @@ export class CubeRube implements ISceneAttachable {
   public showCubeMeta() {
     const info = Object.entries(ECubeFace)
       .map(([face]) => ({
-        [face]: this.cubiesLocated
-          .map((cubie) => cubie.meta.sides.filter((side) => side.face === face))
-          .flat(1)
-          .map((side) => [side.face, side.color]),
+        [face]: new Set(
+          this.cubiesLocated
+            .map((cubie) => cubie.sides.filter((side) => side.face === face))
+            .flat(1)
+            .map((side) => side.color)
+        ),
       }))
       .reduce((acc, curr) => ({ ...acc, ...curr }), {});
     // tslint:disable-next-line: no-console
@@ -105,11 +107,7 @@ export class CubeRube implements ISceneAttachable {
   private recombineRotatingElementsToGroup() {
     const { axis, sliceIndexByAxis } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
-      ({
-        meta: {
-          coords: { [axis]: index },
-        },
-      }) => index === sliceIndexByAxis
+      ({ coords: { [axis]: index } }) => index === sliceIndexByAxis
     );
     const cubiesThreeObjects = sliceOfCubies.map((cubie) => cubie.threeObject);
 

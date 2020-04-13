@@ -1,6 +1,6 @@
 import { EAxis, ECubeFace, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubieMeta } from '../Cubes/CubieMeta/CubieMeta';
-
+import hash from 'object-hash';
 export type TNodeActions = Map<string, (node: Node) => Node>;
 
 export class Node {
@@ -48,16 +48,19 @@ export class Node {
   }
   public makeAction(actionString: string) {
     const { axis, angle, index } = Node.parseActionString(actionString);
-    const cubiesRotated = this.values.map((cubieMeta) => {
-      if (cubieMeta.coords[axis] === index) {
-        console.log('this', cubieMeta.coords, cubieMeta.sides);
-        cubieMeta.rotate(axis, angle);
-        console.log('become', cubieMeta.coords, cubieMeta.sides);
+    const newNode = new Node(
+      this.values.map((cubieMeta) => {
+        if (cubieMeta.coords[axis] === index) {
+          console.log('this', cubieMeta.coords, cubieMeta.sides);
+          const newCubieMeta = cubieMeta.rotate(axis, angle);
+          console.log('become', newCubieMeta.coords, newCubieMeta.sides);
+          return newCubieMeta;
+        }
         return cubieMeta;
-      }
-      return cubieMeta;
-    });
-    const newNode = new Node(cubiesRotated, this.distance + 1);
+      }),
+      this.distance + 1
+    );
+
     newNode.parent = this;
     newNode.parentAction = actionString;
     return newNode;
@@ -109,6 +112,6 @@ export class Node {
   }
 
   private setKey() {
-    this.identifierKey = JSON.stringify(this.values);
+    this.identifierKey = hash(this.values);
   }
 }

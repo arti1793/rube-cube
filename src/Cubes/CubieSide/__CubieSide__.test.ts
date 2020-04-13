@@ -29,11 +29,11 @@ test('cubieside. should rotate +90', () => {
     0,
     1,
   ];
-  cubieSide.rotate(matrix);
+  const newCubieSide = cubieSide.rotate(matrix);
 
-  expect(cubieSide.color).toBe(EColor.red);
-  expect(cubieSide.face).toBe(ECubeFace.left);
-  expect(cubieSide.side).toBe(ECubieSide.front);
+  expect(newCubieSide.color).toBe(EColor.red);
+  expect(newCubieSide.face).toBe(ECubeFace.left);
+  expect(newCubieSide.side).toBe(ECubieSide.front);
 });
 
 test('cubieside. should rotate -90', () => {
@@ -59,9 +59,9 @@ test('cubieside. should rotate -90', () => {
     0,
     1,
   ];
-  cubieSide.rotate(matrix);
+  const newCubieSide = cubieSide.rotate(matrix);
 
-  expect(cubieSide.color).toBe(EColor.red);
-  expect(cubieSide.face).toBe(ECubeFace.backRight);
-  expect(cubieSide.side).toBe(ECubieSide.back);
+  expect(newCubieSide.color).toBe(EColor.red);
+  expect(newCubieSide.face).toBe(ECubeFace.backRight);
+  expect(newCubieSide.side).toBe(ECubieSide.back);
 });

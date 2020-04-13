@@ -48,7 +48,6 @@ export class CubieSide {
       v.equals(newVector)
     );
 
-    this.face = newFace;
-    this.side = newSide;
+    return new CubieSide(this.color, newSide, newFace);
   }
 }

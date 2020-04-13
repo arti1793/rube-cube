@@ -5,9 +5,10 @@ import {
   EColor,
   ECubeFace,
 } from '../common/CommonConstants';
-import { IAxisEdgeMap, ICubieMeta } from '../common/CommonTypes';
+import { IAxisEdgeMap } from '../common/CommonTypes';
 import { getAxisEdgeMap, getCubeFace } from '../common/utils';
 import { Cubie, CubieMultiColored } from './Cubie/Cubie';
+import { CubieMeta } from './CubieMeta/CubieMeta';
 import { CubieSide } from './CubieSide/CubieSide';
 
 export type TCubieFactory = (
@@ -25,7 +26,7 @@ export const CubieFactory: TCubieFactory = (
     new Vector3(coords.xIndex, coords.yIndex, coords.zIndex),
     n
   );
-  const sideColorCubeFaceMap: ICubieMeta = {
+  const cubieMeta = new CubieMeta({
     coords: new Vector3(coords.xIndex, coords.yIndex, coords.zIndex),
     sides: Object.entries(axisEdgeMap)
       .map(([axis]) => {
@@ -41,8 +42,8 @@ export const CubieFactory: TCubieFactory = (
             );
       })
       .filter(Boolean),
-  };
+  });
 
-  const cubie = new CubieMultiColored(sideColorCubeFaceMap);
+  const cubie = new CubieMultiColored(cubieMeta);
   return cubie;
 };
