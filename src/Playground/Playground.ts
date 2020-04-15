@@ -14,7 +14,7 @@ import {
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
-import { CubeRube } from '../Cube/CubeRube';
+import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
 
 export class Playground {
@@ -81,7 +81,7 @@ export class Playground {
         button.style.width = '100px';
         button.style.height = '50px';
         button.onclick = () => this.cubeRube.startAnimation(90, axis, index);
-        button.oncontextmenu = ev => {
+        button.oncontextmenu = (ev) => {
           ev.preventDefault();
           this.cubeRube.startAnimation(-90, axis, index);
         };

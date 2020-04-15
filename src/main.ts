@@ -1,5 +1,6 @@
 import { Vector3 } from 'three';
-import { Algorithm, Node } from './algorithm/algorithm';
+import { Algorithm } from './Algorithm/Algorithm';
+import { Node } from './Algorithm/Node';
 import { Playground } from './Playground/Playground';
 
 const appendTo = document.body;

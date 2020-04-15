@@ -1,5 +1,5 @@
 import { EAxis, NUMBER_OF_CUBIES } from '../common/CommonConstants';
-import { CubeRube } from '../Cube/CubeRube';
+import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 
 interface IActions {
   [key: string]: () => Promise<void>;

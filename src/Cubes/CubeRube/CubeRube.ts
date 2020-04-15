@@ -1,8 +1,12 @@
 import { Group, MathUtils, Mesh, Scene } from 'three';
-import { EAxis } from '../common/CommonConstants';
-import { ISceneAttachable } from '../common/CommonTypes';
-import { Cubie } from './Cubie';
-import { TopologyGenerator } from './TopologyGenerator';
+import {
+  EAxis,
+  ECubeFace,
+  NUMBER_OF_CUBIES,
+} from '../../common/CommonConstants';
+import { ISceneAttachable } from '../../common/CommonTypes';
+import { Cubie } from '../Cubie/Cubie';
+import { TopologyGenerator } from '../TopologyGenerator';
 
 export class CubeRube implements ISceneAttachable {
   public threeObject: Mesh[];
@@ -17,7 +21,7 @@ export class CubeRube implements ISceneAttachable {
 
   private animationProgress: {
     progressDeg: number;
-    positive: boolean;
+    isPositive: boolean;
     stepInDegrees: number;
     targetInDegrees: number;
     axis: EAxis;
@@ -30,6 +34,21 @@ export class CubeRube implements ISceneAttachable {
     this.threeObject = [
       ...this.cubiesLocated.map(({ threeObject }) => threeObject),
     ];
+  }
+
+  public showCubeMeta() {
+    const info = Object.entries(ECubeFace)
+      .map(([face]) => ({
+        [face]: new Set(
+          this.cubiesLocated
+            .map((cubie) => cubie.sides.filter((side) => side.face === face))
+            .flat(1)
+            .map((side) => side.color)
+        ),
+      }))
+      .reduce((acc, curr) => ({ ...acc, ...curr }), {});
+    // tslint:disable-next-line: no-console
+    console.log(info);
   }
 
   public connectTo(scene: Scene) {
@@ -49,7 +68,7 @@ export class CubeRube implements ISceneAttachable {
       stepInDegrees,
       targetInDegrees,
       progressDeg,
-      positive,
+      isPositive: positive,
     } = this.animationProgress;
 
     let currentStep = stepInDegrees;
@@ -77,7 +96,7 @@ export class CubeRube implements ISceneAttachable {
     }
     this.animationProgress = {
       axis,
-      positive: endDeg > 0,
+      isPositive: endDeg > 0,
       progressDeg: 0,
       sliceIndexByAxis,
       stepInDegrees: this.defaultStepInDegrees,
@@ -92,11 +111,8 @@ export class CubeRube implements ISceneAttachable {
   private recombineRotatingElementsToGroup() {
     const { axis, sliceIndexByAxis } = this.animationProgress;
     const sliceOfCubies = this.cubiesLocated.filter(
-      ({
-        meta: {
-          coords: { [axis]: index },
-        },
-      }) => index === sliceIndexByAxis
+      ({ coords: { [axis]: index } }) =>
+        index === sliceIndexByAxis - Math.floor(NUMBER_OF_CUBIES / 2)
     );
     const cubiesThreeObjects = sliceOfCubies.map((cubie) => cubie.threeObject);
 
