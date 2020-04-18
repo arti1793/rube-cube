@@ -59,7 +59,11 @@ export class ManipulationController {
       for (const angle of this.options.angleList) {
         for (const index of nList) {
           actions[`${axis}{${index}} ${angle}`] = () =>
-            this.cubeRube.startAnimation(angle, axis, index);
+            this.cubeRube.startAnimation(
+              angle,
+              axis,
+              index - Math.floor(NUMBER_OF_CUBIES / 2)
+            );
         }
       }
     }

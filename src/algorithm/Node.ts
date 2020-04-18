@@ -1,4 +1,5 @@
 import hash from 'object-hash';
+import { Vector3 } from 'three';
 import { EAxis, ECubeFace, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubieMeta } from '../Cubes/CubieMeta/CubieMeta';
 
@@ -56,14 +57,14 @@ export class Node {
       4
     );
   }
-  public static distanceToHalfEdgesCompletion(node: Node): number {
+  public static distanceToTopsAndEdgesCompletion(node: Node): number {
     return (
       (Object.entries(ECubeFace)
         .map(
           ([face]) =>
             new Set(
               node.values
-                .filter((meta) => meta.sides.length === 2)
+                .filter((meta) => meta.sides.length >= 2)
                 .map((meta) => meta.sides.filter((side) => side.face === face))
                 .flat(1)
                 .map(({ color }) => color)
@@ -97,6 +98,69 @@ export class Node {
       5
     );
   }
+
+  public static distanceToPivotCubies(node: Node) {
+    return Node.findPivotCubies(node).length >= 2 ? 0 : 1;
+  }
+
+  public static findPivotCubies(node: Node) {
+    const tops = node.values.filter((cubie) => cubie.sides.length === 3);
+    const cubies = [];
+    for (const top of tops) {
+      for (const top2 of tops) {
+        if (top !== top2) {
+          if (
+            top.coords.clone().add(top2.coords).equals(new Vector3(0, 0, 0)) &&
+            new Set([...top.sides, ...top2.sides].map(({ color }) => color))
+              .size === 6
+          ) {
+            cubies.push(top, top2);
+          }
+        }
+      }
+    }
+    return cubies;
+  }
+
+  // public static distanceToCompletion2(node: Node): number {
+  //   const weights = [1, 1, 1];
+  //   const sidesOnFaceCount = [1, 4, 4];
+  //   const pivotCubiesWeight = 1;
+  //   const tops = node.values.filter((cubie) => cubie.sides.length === 3);
+  //   // const allSides = node.values.map((cubie) => cubie.sides).flat(1);
+  //   // const tops = Node.findPivotCubies(node);
+  //   const numbers: number[] = [this.findPivotCubies(node).length / 8];
+  //   for (const top of tops.slice(0, 2)) {
+  //     for (const { face, color } of top.sides) {
+  //       const metricOfFace = new Array(3)
+  //         .fill(null)
+  //         .map((_, index) => index + 1)
+  //         .map((sidesCount) =>
+  //           node.values
+  //             .filter((cubie) => cubie.sides.length === sidesCount)
+  //             .map(({ sides }) => sides)
+  //             .flat(1)
+  //         )
+
+  //         .map(
+  //           (sides) =>
+  //             sides.filter((side) => side.color === color && side.face === face)
+  //               .length
+  //         )
+  //         .map(
+  //           (count, index) => count // / sidesOnFaceCount[index])// * weights[index]
+  //         )
+  //         .reduce((acc, curr) => acc + curr, 0);
+  //       numbers.push(metricOfFace);
+  //     }
+  //   }
+  //   return numbers;
+  // return (
+  //   1 -
+  //   numbers.reduce((acc, curr) => acc + curr, 0) /
+  //     (weights.reduce((acc, curr) => acc + curr, 0) + pivotCubiesWeight)
+  // );
+  // }
 
   public static isInversingAction(action1: string, action2: string) {
     const action1Parsed = Node.parseActionString(action1);

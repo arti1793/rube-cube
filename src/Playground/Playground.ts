@@ -13,6 +13,8 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Algorithm } from '../Algorithm/Algorithm';
+import { Node } from '../Algorithm/Node';
 import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
@@ -33,6 +35,8 @@ export class Playground {
 
   public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
   public manipulationController = new ManipulationController(this.cubeRube);
+
+  public algorithm = new Algorithm();
 
   private fpsInterval = 15;
 
@@ -64,6 +68,19 @@ export class Playground {
     this.startAnimating(this.fps);
   }
 
+  public async solve() {
+    const solveActions = this.algorithm.start(
+      new Node(this.cubeRube.cubiesLocated, Infinity)
+    );
+    for (const action of solveActions.actions) {
+      const actionParsed = Node.parseActionString(action);
+      await this.cubeRube.startAnimation(
+        actionParsed.angle,
+        actionParsed.axis,
+        actionParsed.index - Math.floor(NUMBER_OF_CUBIES / 2)
+      );
+    }
+  }
   public renderButtons = () => {
     const nList: number[] = new Array(NUMBER_OF_CUBIES)
       .fill(null)
@@ -80,10 +97,19 @@ export class Playground {
         button.textContent = `${axis}_${index}`;
         button.style.width = '100px';
         button.style.height = '50px';
-        button.onclick = () => this.cubeRube.startAnimation(90, axis, index);
+        button.onclick = () =>
+          this.cubeRube.startAnimation(
+            90,
+            axis,
+            index - Math.floor(NUMBER_OF_CUBIES / 2)
+          );
         button.oncontextmenu = (ev) => {
           ev.preventDefault();
-          this.cubeRube.startAnimation(-90, axis, index);
+          this.cubeRube.startAnimation(
+            -90,
+            axis,
+            index - Math.floor(NUMBER_OF_CUBIES / 2)
+          );
         };
         wrapperAxis.append(button);
       }
