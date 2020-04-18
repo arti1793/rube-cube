@@ -1,7 +1,6 @@
 import { Node } from './Node';
 
 enum ESubtask {
-  findPivotTops,
   tops,
   halfOfEdges,
   complete,
@@ -12,34 +11,31 @@ export class Algorithm {
   private actions = Node.getActions();
 
   private subTaskMap = {
-    [ESubtask.findPivotTops]: (node: Node) =>
-      Node.distanceToPivotCubies(node) === 0,
-    [ESubtask.tops]: (node: Node) => Node.distanceToTopsCompletion(node) === 0,
+    [ESubtask.tops]: (node: Node) =>
+      Node.distanceToCompletionFactory([0, 0, 1])(node) === 0,
     [ESubtask.halfOfEdges]: (node: Node) =>
-      Node.distanceToCompletion(node) === 0,
-    [ESubtask.complete]: (node: Node) => Node.distanceToCompletion(node) === 0,
+      Node.distanceToCompletionFactory([0, 1, 1])(node) === 0,
+    [ESubtask.complete]: (node: Node) =>
+      Node.distanceToCompletionFactory([1, 1, 1])(node) === 0,
   };
   private subTaskMetricMap = {
-    [ESubtask.findPivotTops]: Node.distanceToPivotCubies,
-    [ESubtask.tops]: Node.distanceToTopsCompletion,
-    [ESubtask.halfOfEdges]: Node.distanceToTopsAndEdgesCompletion,
-    [ESubtask.complete]: Node.distanceToCompletion,
+    [ESubtask.tops]: Node.distanceToCompletionFactory([0, 0, 1]),
+    [ESubtask.halfOfEdges]: Node.distanceToCompletionFactory([0, 1, 1]),
+    [ESubtask.complete]: Node.distanceToCompletionFactory([1, 1, 1]),
   };
   public start(startNode: Node) {
-    // console.time('pivotTops');
-    // const pivotTops = this.runSubTask(startNode, ESubtask.findPivotTops);
-    // console.timeEnd('pivotTops');
-    // console.time('tops');
-    // const tops = this.runSubTask(pivotTops.endNode, ESubtask.tops);
-    // console.timeEnd('tops');
-    // console.time('half');
-    // const halfs = this.runSubTask(tops.endNode, ESubtask.halfOfEdges);
-    // console.timeEnd('half');
+    console.time('tops');
+    const tops = this.runSubTask(startNode, ESubtask.tops);
+    console.timeEnd('tops');
+    console.time('half');
+    const halfs = this.runSubTask(tops.endNode, ESubtask.halfOfEdges);
+    console.timeEnd('half');
     console.time('complete');
-    const complete = this.runSubTask(startNode, ESubtask.complete);
+    const complete = this.runSubTask(halfs.endNode, ESubtask.complete);
     console.timeEnd('complete');
     return complete;
   }
+
   private runSubTask(startNode: Node, subTask: ESubtask) {
     let node = startNode;
     let i = this.subTaskLimit;
@@ -110,6 +106,11 @@ export class Algorithm {
       endNode: node,
     };
   }
+
+  // private selectNextNode2(node: Node, unVisitedNodes: Map<string, Node>) {
+  //   const unvisitedNodesList = [...unVisitedNodes.values()];
+  //   return unvisitedNodesList[0];
+  // }
   private selectNextNode(node: Node, unVisitedNodes: Map<string, Node>) {
     const unvisitedNodesList = [...unVisitedNodes.values()];
     const weights = unvisitedNodesList.map(

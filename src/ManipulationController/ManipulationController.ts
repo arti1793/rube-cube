@@ -1,5 +1,6 @@
 import { EAxis, NUMBER_OF_CUBIES } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
+import { Node } from '../Algorithm/Node';
 
 interface IActions {
   [key: string]: () => Promise<void>;
@@ -18,10 +19,15 @@ export class ManipulationController {
     const actions = this.generateRandomActions(
       this.options.randomiseActionsCount
     );
+    const distances = [];
     for (const [key, action] of actions) {
       console.log(key);
       await action();
+      distances.push(
+        Node.distanceToCompletion(new Node(this.cubeRube.cubiesLocated, 0))
+      );
     }
+    console.log(distances);
   }
   // public isComplete() {
   //   const colors = [

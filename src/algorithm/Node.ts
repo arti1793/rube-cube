@@ -105,7 +105,7 @@ export class Node {
 
   public static findPivotCubies(node: Node) {
     const tops = node.values.filter((cubie) => cubie.sides.length === 3);
-    const cubies = [];
+    const cubies: CubieMeta[][] = [];
     for (const top of tops) {
       for (const top2 of tops) {
         if (top !== top2) {
@@ -114,7 +114,10 @@ export class Node {
             new Set([...top.sides, ...top2.sides].map(({ color }) => color))
               .size === 6
           ) {
-            cubies.push(top, top2);
+            !(
+              cubies.find(([, cubie]) => cubie === top) ||
+              cubies.find(([cubie]) => cubie === top2)
+            ) && cubies.push([top, top2]);
           }
         }
       }
@@ -122,45 +125,134 @@ export class Node {
     return cubies;
   }
 
-  // public static distanceToCompletion2(node: Node): number {
-  //   const weights = [1, 1, 1];
-  //   const sidesOnFaceCount = [1, 4, 4];
-  //   const pivotCubiesWeight = 1;
-  //   const tops = node.values.filter((cubie) => cubie.sides.length === 3);
-  //   // const allSides = node.values.map((cubie) => cubie.sides).flat(1);
-  //   // const tops = Node.findPivotCubies(node);
-  //   const numbers: number[] = [this.findPivotCubies(node).length / 8];
-  //   for (const top of tops.slice(0, 2)) {
-  //     for (const { face, color } of top.sides) {
-  //       const metricOfFace = new Array(3)
-  //         .fill(null)
-  //         .map((_, index) => index + 1)
-  //         .map((sidesCount) =>
-  //           node.values
-  //             .filter((cubie) => cubie.sides.length === sidesCount)
-  //             .map(({ sides }) => sides)
-  //             .flat(1)
-  //         )
+  public static distanceToCompletionFactory(weights: number[]) {
+    return (node: Node) => {
+      const sidesOnFaceCount = [1, 4 * (NUMBER_OF_CUBIES - 2), 4];
+      const numbers: number[] = [];
+      for (const top of node.values.filter(
+        (cubie) => cubie.sides.length === 3
+      )) {
+        for (const { face, color } of top.sides) {
+          const metricOfFace = new Array(3)
+            .fill(null)
+            .map((_, index) => index + 1)
+            .map((sidesCount) =>
+              node.values
+                .filter((cubie) => cubie.sides.length === sidesCount)
+                .map(({ sides }) => sides)
+                .flat(1)
+            )
 
-  //         .map(
-  //           (sides) =>
-  //             sides.filter((side) => side.color === color && side.face === face)
-  //               .length
-  //         )
-  //         .map(
-  //           (count, index) => count // / sidesOnFaceCount[index])// * weights[index]
-  //         )
-  //         .reduce((acc, curr) => acc + curr, 0);
-  //       numbers.push(metricOfFace);
-  //     }
-  //   }
-  //   return numbers;
-  // return (
-  //   1 -
-  //   numbers.reduce((acc, curr) => acc + curr, 0) /
-  //     (weights.reduce((acc, curr) => acc + curr, 0) + pivotCubiesWeight)
-  // );
-  // }
+            .map(
+              (sides) =>
+                sides.filter(
+                  (side) => side.color === color && side.face === face
+                ).length
+            )
+            .map((count, index) => count / sidesOnFaceCount[index])
+            .reduce((acc, curr, index) => acc + curr * weights[index], 0);
+          numbers.push(
+            metricOfFace / weights.reduce((acc, curr) => acc + curr, 0)
+          );
+        }
+      }
+
+      return (
+        1 - numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length || 0
+      );
+    };
+  }
+  public static distanceToCompletion4(node: Node) {
+    const weights = [1, 1, 1];
+    const sidesOnFaceCount = [1, 4 * (NUMBER_OF_CUBIES - 2), 4];
+    const numbers: number[] = [];
+    for (const top of node.values.filter((cubie) => cubie.sides.length === 3)) {
+      for (const { face, color } of top.sides) {
+        const metricOfFace = new Array(3)
+          .fill(null)
+          .map((_, index) => index + 1)
+          .map((sidesCount) =>
+            node.values
+              .filter((cubie) => cubie.sides.length === sidesCount)
+              .map(({ sides }) => sides)
+              .flat(1)
+          )
+
+          .map(
+            (sides) =>
+              sides.filter((side) => side.color === color && side.face === face)
+                .length
+          )
+          .map((count, index) => count / sidesOnFaceCount[index])
+          .reduce((acc, curr, index) => acc + curr * weights[index], 0);
+        numbers.push(
+          metricOfFace / weights.reduce((acc, curr) => acc + curr, 0)
+        );
+      }
+    }
+
+    return (
+      1 - numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length || 0
+    );
+  }
+  /**
+   *
+   * @param node
+   * distanse to completion
+   * [0,1] 0 - completed 1 - not completed
+   */
+  public static distanceToCompletion3(node: Node) {
+    const pivotTops = Node.findPivotCubies(node);
+    const metric = [0];
+    for (const pivotPair of pivotTops) {
+      metric.push(Node.metricOfCompletionByPairOfTops(node, pivotPair));
+    }
+    const min = 1 - Math.max(...metric);
+    return min;
+  }
+
+  /**
+   *
+   * @param node
+   * @param tops
+   * [0,1] 0- not completed 1-completed
+   */
+  public static metricOfCompletionByPairOfTops(
+    node: Node,
+    tops: CubieMeta[]
+  ): number {
+    const weights = [0, 1, 10];
+    const sidesOnFaceCount = [1, 4 * (NUMBER_OF_CUBIES - 2), 4];
+    const numbers: number[] = [];
+    for (const top of tops) {
+      for (const { face, color } of top.sides) {
+        const metricOfFace = new Array(3)
+          .fill(null)
+          .map((_, index) => index + 1)
+          .map((sidesCount) =>
+            node.values
+              .filter((cubie) => cubie.sides.length === sidesCount)
+              .map(({ sides }) => sides)
+              .flat(1)
+          )
+
+          .map(
+            (sides) =>
+              sides.filter((side) => side.color === color && side.face === face)
+                .length
+          )
+          .map((count, index) => count / sidesOnFaceCount[index])
+          .reduce((acc, curr, index) => acc + curr * weights[index], 0);
+        numbers.push(
+          metricOfFace / weights.reduce((acc, curr) => acc + curr, 0)
+        );
+      }
+    }
+
+    // numbers = numbers.sort((a, b) => b - a).slice(0, 3);
+    // console.log(numbers);
+    return numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length || 0;
+  }
 
   public static isInversingAction(action1: string, action2: string) {
     const action1Parsed = Node.parseActionString(action1);
