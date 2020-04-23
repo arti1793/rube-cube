@@ -156,6 +156,7 @@ export class Node {
           );
         }
       }
+      console.log(numbers);
 
       return (
         1 - numbers.reduce((acc, curr) => acc + curr, 0) / numbers.length || 0
@@ -267,6 +268,8 @@ export class Node {
   private static ACTION_PARAMS_SEPARATOR = ' | ';
 
   public distance: number;
+  public deep: number;
+  public weight: number;
   public parent: Node;
   public parentAction: string;
   public values: CubieMeta[];
