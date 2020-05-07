@@ -82,7 +82,8 @@ export class CubeRube implements ISceneAttachable {
   public startAnimation(
     endDeg: number,
     axis: EAxis,
-    sliceIndexByAxis: number
+    sliceIndexByAxis: number,
+    stepInDegrees: number = this.defaultStepInDegrees,
   ): Promise<void> {
     if (endDeg % 90 !== 0) {
       throw new Error('rotation must be a multiple of 90');
@@ -95,7 +96,7 @@ export class CubeRube implements ISceneAttachable {
       isPositive: endDeg > 0,
       progressDeg: 0,
       sliceIndexByAxis,
-      stepInDegrees: this.defaultStepInDegrees,
+      stepInDegrees,
       targetInDegrees: Math.abs(endDeg),
     };
     this.clearGroup = this.recombineRotatingElementsToGroup();

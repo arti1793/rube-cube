@@ -74,12 +74,12 @@ export const CUBE_FACE_EDGE_TYPE_MAP = new Map([
   [ECubeFace.B, { axis: EAxis.z, edgeType: EEdgeType.near }],
 ]);
 export const CUBE_FACE_COLOR_MAP = new Map([
-  [ECubeFace.U, EColor.blue],
+  [ECubeFace.U, EColor.white],
+  [ECubeFace.R, EColor.red],
+  [ECubeFace.F, EColor.green],
   [ECubeFace.L, EColor.orange],
-  [ECubeFace.F, EColor.red],
-  [ECubeFace.R, EColor.white],
-  [ECubeFace.B, EColor.yellow],
-  [ECubeFace.D, EColor.green],
+  [ECubeFace.B, EColor.blue],
+  [ECubeFace.D, EColor.yellow],
 ]);
 
 export const ActionParamsMapping = new Map([

@@ -1,8 +1,10 @@
+import { CubeRube } from "../Cubes/CubeRube/CubeRube";
 
 export class Algorithm {
 
-  public start(startNode: Node) {
+  constructor(cubeRube: CubeRube) {
 
   }
+  public start() { }
 
 }

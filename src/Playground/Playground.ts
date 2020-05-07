@@ -14,6 +14,7 @@ import {
 } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
+import { Algorithm } from '../algorithm/algorithm';
 
 export class Playground {
   public scene = new Scene();
@@ -31,6 +32,7 @@ export class Playground {
 
   public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
   public manipulationController = new ManipulationController(this.cubeRube);
+  public algorithm = new Algorithm(this.cubeRube);
 
   private fpsInterval = 15;
 
@@ -60,6 +62,7 @@ export class Playground {
     this.scene.background = new Color(EColor.white);
 
     this.startAnimating(this.fps);
+    this.manipulationController.deterministicShuffle();
   }
 
   public renderButtons = () => {
@@ -83,7 +86,12 @@ export class Playground {
     randomiseButton.style.width = '100px';
     randomiseButton.style.height = '50px';
     randomiseButton.onclick = () => this.manipulationController.randomise();
-    wrapper.append(randomiseButton);
+    const solveButton = document.createElement('button');
+    solveButton.textContent = 'solveButton';
+    solveButton.style.width = '100px';
+    solveButton.style.height = '50px';
+    solveButton.onclick = () => this.algorithm.start();
+    wrapper.append(solveButton);
     document.body.append(wrapper);
   };
 
