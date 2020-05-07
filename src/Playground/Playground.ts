@@ -7,13 +7,10 @@ import {
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { Algorithm } from '../Algorithm/Algorithm';
-import { Node } from '../Algorithm/Node';
 import {
-  EAxis,
+  EAction,
   EColor,
   NUMBER_OF_CUBIES,
-  EAction,
 } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
@@ -34,8 +31,6 @@ export class Playground {
 
   public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
   public manipulationController = new ManipulationController(this.cubeRube);
-
-  public algorithm = new Algorithm();
 
   private fpsInterval = 15;
 
@@ -67,51 +62,21 @@ export class Playground {
     this.startAnimating(this.fps);
   }
 
-  public async solve() {
-    const solveActions = this.algorithm.start(
-      new Node(this.cubeRube.cubiesLocated, Infinity)
-    );
-    for (const action of solveActions.actions) {
-      const actionParsed = Node.parseActionString(action);
-      await this.cubeRube.startAnimation(
-        actionParsed.angle,
-        actionParsed.axis,
-        actionParsed.index - Math.floor(NUMBER_OF_CUBIES / 2)
-      );
-    }
-  }
   public renderButtons = () => {
-    const nList: number[] = new Array(NUMBER_OF_CUBIES)
-      .fill(null)
-      .map((_, index) => index);
 
     const wrapper = document.createElement('div');
     wrapper.style.position = 'fixed';
     wrapper.style.bottom = '0';
-    for (const [axisIndex] of Object.values(EAxis)) {
-      const wrapperAxis = document.createElement('div');
-      for (const index of nList) {
-        const button = document.createElement('button');
-        button.textContent = `${
-          Object.values(EAction)[parseInt(axisIndex, 10) + index]
-        }`;
-        button.style.width = '100px';
-        button.style.height = '50px';
-        button.onclick = () =>
-          this.manipulationController.makeAction(
-            Object.values(EAction)[parseInt(axisIndex, 10) + index] as EAction
-          );
-        // button.oncontextmenu = (ev) => {
-        //   ev.preventDefault();
-        //   this.cubeRube.startAnimation(
-        //     -90,
-        //     axis,
-        //     index - Math.floor(NUMBER_OF_CUBIES / 2)
-        //   );
-        // };
-        wrapperAxis.append(button);
-      }
-      wrapper.append(wrapperAxis);
+
+    for (const action of Object.keys(EAction)) {
+      const button = document.createElement('button');
+      button.textContent = action;
+      button.style.width = '100px';
+      button.style.height = '50px';
+      button.onclick = () => {
+        this.manipulationController.makeAction(action as EAction)
+      };
+      wrapper.append(button);
     }
     const randomiseButton = document.createElement('button');
     randomiseButton.textContent = 'randomise';
@@ -133,16 +98,6 @@ export class Playground {
   }
 
   private setEnvironment() {
-    // const loader = new TextureLoader();
-    // const wallGeometry = new PlaneGeometry(6000, 6000, 2, 10);
-    // const wallMaterial = new MeshBasicMaterial({
-    // map: loader.load(background),
-    // side: DoubleSide,
-    // });
-    // const wall = new Mesh(wallGeometry, wallMaterial);
-    // wall.position.set(-500, -100, -500);
-    // wall.rotateY(Math.PI / 4);
-    // this.scene.add(wall);
   }
 
   private setCameraPosition = () => {

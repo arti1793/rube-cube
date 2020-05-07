@@ -92,6 +92,16 @@ export enum EAction {
   Dr = 'Dr',
 }
 export const ActionParamsMapping = new Map([
-  [EAction.U, { axis: EAxis.y, angle: -90, slice: 1 }],
-  [EAction.Ur, { axis: EAxis.y, angle: 90, slice: 1 }],
+  [EAction.U, { axis: EAxis.y, slice: 1, angle: -90, }],
+  [EAction.Ur, { axis: EAxis.y, slice: 1, angle: 90, }],
+  [EAction.L, { axis: EAxis.x, slice: -1, angle: 90, }],
+  [EAction.Lr, { axis: EAxis.x, slice: -1, angle: -90, }],
+  [EAction.F, { axis: EAxis.z, slice: 1, angle: -90, }],
+  [EAction.Fr, { axis: EAxis.z, slice: 1, angle: 90, }],
+  [EAction.R, { axis: EAxis.x, slice: 1, angle: -90, }],
+  [EAction.Rr, { axis: EAxis.x, slice: 1, angle: 90, }],
+  [EAction.B, { axis: EAxis.z, slice: -1, angle: 90, }],
+  [EAction.Br, { axis: EAxis.z, slice: -1, angle: -90, }],
+  [EAction.D, { axis: EAxis.y, slice: -1, angle: 90, }],
+  [EAction.Dr, { axis: EAxis.y, slice: -1, angle: -90, }],
 ]);
