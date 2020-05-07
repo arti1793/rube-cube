@@ -38,12 +38,12 @@ export const CubieFactory: TCubieFactory = (
         return edgeType === null
           ? undefined
           : new CubieSide(
-              cubeFaceColorMap.get(
-                getCubeFace((axis as unknown) as EAxis, edgeType)
-              ),
-              AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType],
+            cubeFaceColorMap.get(
               getCubeFace((axis as unknown) as EAxis, edgeType)
-            );
+            ),
+            AXIS_EDGE_CUBE_SIDE_MAP[axis as EAxis][edgeType],
+            getCubeFace((axis as unknown) as EAxis, edgeType)
+          );
       })
       .filter(Boolean),
   });

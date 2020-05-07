@@ -8,8 +8,8 @@ import {
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
-  EAction,
   EColor,
+  ECubeFace,
   NUMBER_OF_CUBIES,
 } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
@@ -68,13 +68,13 @@ export class Playground {
     wrapper.style.position = 'fixed';
     wrapper.style.bottom = '0';
 
-    for (const action of Object.keys(EAction)) {
+    for (const action of Object.keys(ECubeFace)) {
       const button = document.createElement('button');
       button.textContent = action;
       button.style.width = '100px';
       button.style.height = '50px';
       button.onclick = () => {
-        this.manipulationController.makeAction(action as EAction)
+        this.manipulationController.makeAction(action as ECubeFace)
       };
       wrapper.append(button);
     }

@@ -1,11 +1,10 @@
-import { ActionParamsMapping, EAction } from '../common/CommonConstants';
+import { ActionParamsMapping, ECubeFace } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 
 export class ManipulationController {
   private cubeRube: CubeRube;
 
   private options = {
-    angleList: [90, -90],
     randomiseActionsCount: 50,
   };
   constructor(cubeRube: CubeRube) {
@@ -20,7 +19,7 @@ export class ManipulationController {
     }
   }
 
-  public makeAction(action: EAction) {
+  public makeAction(action: ECubeFace) {
     const params = ActionParamsMapping.get(action);
     return this.cubeRube.startAnimation(
       params.angle,
@@ -29,8 +28,8 @@ export class ManipulationController {
     );
   }
 
-  private generateRandomActions(count: number): EAction[] {
-    const possibleActions = Object.keys(EAction) as EAction[];
+  private generateRandomActions(count: number): ECubeFace[] {
+    const possibleActions = Object.keys(ECubeFace) as ECubeFace[];
     const randNumber = () =>
       Math.round(Math.random() * (possibleActions.length - 1));
 

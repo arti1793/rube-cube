@@ -11,12 +11,12 @@ const SideVectorMap: Map<ECubieSide, Vector3> = new Map([
 ]);
 
 const CubeFaceVectorMap: Map<ECubeFace, Vector3> = new Map([
-  [ECubeFace.top, new Vector3(0, 1, 0)],
-  [ECubeFace.bottom, new Vector3(0, -1, 0)],
-  [ECubeFace.left, new Vector3(-1, 0, 0)],
-  [ECubeFace.right, new Vector3(1, 0, 0)],
-  [ECubeFace.front, new Vector3(0, 0, 1)],
-  [ECubeFace.back, new Vector3(0, 0, -1)],
+  [ECubeFace.U, new Vector3(0, 1, 0)],
+  [ECubeFace.D, new Vector3(0, -1, 0)],
+  [ECubeFace.L, new Vector3(-1, 0, 0)],
+  [ECubeFace.R, new Vector3(1, 0, 0)],
+  [ECubeFace.F, new Vector3(0, 0, 1)],
+  [ECubeFace.B, new Vector3(0, 0, -1)],
 ]);
 
 /**

@@ -13,17 +13,10 @@ export class CubieMeta implements ICubieMeta {
   }
 
   public rotateMatrix4(rotationalMatrix: Matrix4) {
-    // const bias = new Vector3(
-    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2),
-    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2),
-    //   Math.floor((NUMBER_OF_CUBIES - 1) / 2)
-    // );
     return new CubieMeta({
       coords: this.coords
         .clone()
-        // .sub(bias)
         .applyMatrix4(rotationalMatrix)
-        // .add(bias)
         .round(),
       sides: this.sides.map((side) => side.rotate(rotationalMatrix)),
     });

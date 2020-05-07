@@ -16,16 +16,6 @@ export enum EEdgeType {
   far = 'far',
 }
 
-export enum ECubeFace {
-  front = 'front',
-  right = 'right',
-  top = 'top',
-  bottom = 'bottom',
-
-  left = 'left',
-  back = 'back',
-}
-
 /**
  * viewer is on z+ axis for enum
  */
@@ -44,14 +34,6 @@ export enum EAxis {
   z = 'z',
 }
 
-export const CUBE_FACE_EDGE_TYPE_MAP = new Map([
-  [ECubeFace.front, { axis: EAxis.z, edgeType: EEdgeType.far }],
-  [ECubeFace.right, { axis: EAxis.x, edgeType: EEdgeType.far }],
-  [ECubeFace.top, { axis: EAxis.y, edgeType: EEdgeType.far }],
-  [ECubeFace.bottom, { axis: EAxis.y, edgeType: EEdgeType.near }],
-  [ECubeFace.left, { axis: EAxis.x, edgeType: EEdgeType.near }],
-  [ECubeFace.back, { axis: EAxis.z, edgeType: EEdgeType.near }],
-]);
 
 export const AXIS_EDGE_CUBE_SIDE_MAP = {
   [EAxis.x]: {
@@ -68,16 +50,7 @@ export const AXIS_EDGE_CUBE_SIDE_MAP = {
   },
 };
 
-export const CUBE_FACE_COLOR_MAP = new Map([
-  [ECubeFace.front, EColor.blue],
-  [ECubeFace.right, EColor.orange],
-  [ECubeFace.top, EColor.red],
-  [ECubeFace.bottom, EColor.white],
-  [ECubeFace.left, EColor.yellow],
-  [ECubeFace.back, EColor.green],
-]);
-
-export enum EAction {
+export enum ECubeFace {
   U = 'U',
   Ur = 'Ur',
   L = 'L',
@@ -91,17 +64,35 @@ export enum EAction {
   D = 'D',
   Dr = 'Dr',
 }
+
+export const CUBE_FACE_EDGE_TYPE_MAP = new Map([
+  [ECubeFace.F, { axis: EAxis.z, edgeType: EEdgeType.far }],
+  [ECubeFace.R, { axis: EAxis.x, edgeType: EEdgeType.far }],
+  [ECubeFace.U, { axis: EAxis.y, edgeType: EEdgeType.far }],
+  [ECubeFace.D, { axis: EAxis.y, edgeType: EEdgeType.near }],
+  [ECubeFace.L, { axis: EAxis.x, edgeType: EEdgeType.near }],
+  [ECubeFace.B, { axis: EAxis.z, edgeType: EEdgeType.near }],
+]);
+export const CUBE_FACE_COLOR_MAP = new Map([
+  [ECubeFace.U, EColor.blue],
+  [ECubeFace.L, EColor.orange],
+  [ECubeFace.F, EColor.red],
+  [ECubeFace.R, EColor.white],
+  [ECubeFace.B, EColor.yellow],
+  [ECubeFace.D, EColor.green],
+]);
+
 export const ActionParamsMapping = new Map([
-  [EAction.U, { axis: EAxis.y, slice: 1, angle: -90, }],
-  [EAction.Ur, { axis: EAxis.y, slice: 1, angle: 90, }],
-  [EAction.L, { axis: EAxis.x, slice: -1, angle: 90, }],
-  [EAction.Lr, { axis: EAxis.x, slice: -1, angle: -90, }],
-  [EAction.F, { axis: EAxis.z, slice: 1, angle: -90, }],
-  [EAction.Fr, { axis: EAxis.z, slice: 1, angle: 90, }],
-  [EAction.R, { axis: EAxis.x, slice: 1, angle: -90, }],
-  [EAction.Rr, { axis: EAxis.x, slice: 1, angle: 90, }],
-  [EAction.B, { axis: EAxis.z, slice: -1, angle: 90, }],
-  [EAction.Br, { axis: EAxis.z, slice: -1, angle: -90, }],
-  [EAction.D, { axis: EAxis.y, slice: -1, angle: 90, }],
-  [EAction.Dr, { axis: EAxis.y, slice: -1, angle: -90, }],
+  [ECubeFace.U, { axis: EAxis.y, slice: 1, angle: -90, }],
+  [ECubeFace.Ur, { axis: EAxis.y, slice: 1, angle: 90, }],
+  [ECubeFace.L, { axis: EAxis.x, slice: -1, angle: 90, }],
+  [ECubeFace.Lr, { axis: EAxis.x, slice: -1, angle: -90, }],
+  [ECubeFace.F, { axis: EAxis.z, slice: 1, angle: -90, }],
+  [ECubeFace.Fr, { axis: EAxis.z, slice: 1, angle: 90, }],
+  [ECubeFace.R, { axis: EAxis.x, slice: 1, angle: -90, }],
+  [ECubeFace.Rr, { axis: EAxis.x, slice: 1, angle: 90, }],
+  [ECubeFace.B, { axis: EAxis.z, slice: -1, angle: 90, }],
+  [ECubeFace.Br, { axis: EAxis.z, slice: -1, angle: -90, }],
+  [ECubeFace.D, { axis: EAxis.y, slice: -1, angle: 90, }],
+  [ECubeFace.Dr, { axis: EAxis.y, slice: -1, angle: -90, }],
 ]);
