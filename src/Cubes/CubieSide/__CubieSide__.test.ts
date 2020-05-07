@@ -3,7 +3,7 @@ import { EColor, ECubeFace, ECubieSide } from '../../common/CommonConstants';
 import { CubieSide } from './CubieSide';
 
 test('cubieside. should create', () => {
-  const cubieSide = new CubieSide(EColor.blue, ECubieSide.top, ECubeFace.left);
+  const cubieSide = new CubieSide(EColor.blue, ECubieSide.top, ECubeFace.front);
   expect(cubieSide).toBeInstanceOf(CubieSide);
 });
 test('cubieside. should rotate +90', () => {
@@ -32,7 +32,7 @@ test('cubieside. should rotate +90', () => {
   const newCubieSide = cubieSide.rotate(matrix);
 
   expect(newCubieSide.color).toBe(EColor.red);
-  expect(newCubieSide.face).toBe(ECubeFace.left);
+  expect(newCubieSide.face).toBe(ECubeFace.front);
   expect(newCubieSide.side).toBe(ECubieSide.front);
 });
 
@@ -62,6 +62,6 @@ test('cubieside. should rotate -90', () => {
   const newCubieSide = cubieSide.rotate(matrix);
 
   expect(newCubieSide.color).toBe(EColor.red);
-  expect(newCubieSide.face).toBe(ECubeFace.backRight);
+  expect(newCubieSide.face).toBe(ECubeFace.back);
   expect(newCubieSide.side).toBe(ECubieSide.back);
 });

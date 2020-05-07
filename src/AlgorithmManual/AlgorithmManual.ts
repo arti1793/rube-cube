@@ -1,3 +1,4 @@
+import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 export class AlgorithmManual {
-  start() {}
+  start(cubeRube: CubeRube) {}
 }

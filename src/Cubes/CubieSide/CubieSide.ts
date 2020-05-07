@@ -13,10 +13,10 @@ const SideVectorMap: Map<ECubieSide, Vector3> = new Map([
 const CubeFaceVectorMap: Map<ECubeFace, Vector3> = new Map([
   [ECubeFace.top, new Vector3(0, 1, 0)],
   [ECubeFace.bottom, new Vector3(0, -1, 0)],
-  [ECubeFace.backLeft, new Vector3(-1, 0, 0)],
+  [ECubeFace.left, new Vector3(-1, 0, 0)],
   [ECubeFace.right, new Vector3(1, 0, 0)],
-  [ECubeFace.left, new Vector3(0, 0, 1)],
-  [ECubeFace.backRight, new Vector3(0, 0, -1)],
+  [ECubeFace.front, new Vector3(0, 0, 1)],
+  [ECubeFace.back, new Vector3(0, 0, -1)],
 ]);
 
 /**

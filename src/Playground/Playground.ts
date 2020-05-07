@@ -1,21 +1,20 @@
-import background from 'assets/background.jpg';
 import {
   AxesHelper,
   Color,
-  DoubleSide,
-  Mesh,
-  MeshBasicMaterial,
   PerspectiveCamera,
-  PlaneGeometry,
   Scene,
   SpotLight,
-  TextureLoader,
   WebGLRenderer,
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { Algorithm } from '../Algorithm/Algorithm';
 import { Node } from '../Algorithm/Node';
-import { EAxis, EColor, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import {
+  EAxis,
+  EColor,
+  NUMBER_OF_CUBIES,
+  EAction,
+} from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
 
@@ -89,28 +88,27 @@ export class Playground {
     const wrapper = document.createElement('div');
     wrapper.style.position = 'fixed';
     wrapper.style.bottom = '0';
-    for (const [, axis] of Object.entries(EAxis)) {
+    for (const [axisIndex] of Object.values(EAxis)) {
       const wrapperAxis = document.createElement('div');
-
       for (const index of nList) {
         const button = document.createElement('button');
-        button.textContent = `${axis}_${index}`;
+        button.textContent = `${
+          Object.values(EAction)[parseInt(axisIndex, 10) + index]
+        }`;
         button.style.width = '100px';
         button.style.height = '50px';
         button.onclick = () =>
-          this.cubeRube.startAnimation(
-            90,
-            axis,
-            index - Math.floor(NUMBER_OF_CUBIES / 2)
+          this.manipulationController.makeAction(
+            Object.values(EAction)[parseInt(axisIndex, 10) + index] as EAction
           );
-        button.oncontextmenu = (ev) => {
-          ev.preventDefault();
-          this.cubeRube.startAnimation(
-            -90,
-            axis,
-            index - Math.floor(NUMBER_OF_CUBIES / 2)
-          );
-        };
+        // button.oncontextmenu = (ev) => {
+        //   ev.preventDefault();
+        //   this.cubeRube.startAnimation(
+        //     -90,
+        //     axis,
+        //     index - Math.floor(NUMBER_OF_CUBIES / 2)
+        //   );
+        // };
         wrapperAxis.append(button);
       }
       wrapper.append(wrapperAxis);
@@ -135,18 +133,16 @@ export class Playground {
   }
 
   private setEnvironment() {
-    const loader = new TextureLoader();
-    const wallGeometry = new PlaneGeometry(6000, 6000, 2, 10);
-
-    const wallMaterial = new MeshBasicMaterial({
-      map: loader.load(background),
-      side: DoubleSide,
-    });
-
-    const wall = new Mesh(wallGeometry, wallMaterial);
-    wall.position.set(-500, -100, -500);
-    wall.rotateY(Math.PI / 4);
-    this.scene.add(wall);
+    // const loader = new TextureLoader();
+    // const wallGeometry = new PlaneGeometry(6000, 6000, 2, 10);
+    // const wallMaterial = new MeshBasicMaterial({
+    // map: loader.load(background),
+    // side: DoubleSide,
+    // });
+    // const wall = new Mesh(wallGeometry, wallMaterial);
+    // wall.position.set(-500, -100, -500);
+    // wall.rotateY(Math.PI / 4);
+    // this.scene.add(wall);
   }
 
   private setCameraPosition = () => {

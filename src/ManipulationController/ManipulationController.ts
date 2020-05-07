@@ -1,10 +1,6 @@
-import { EAxis, NUMBER_OF_CUBIES } from '../common/CommonConstants';
+import { ActionParamsMapping, EAction } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
-import { Node } from '../Algorithm/Node';
 
-interface IActions {
-  [key: string]: () => Promise<void>;
-}
 export class ManipulationController {
   private cubeRube: CubeRube;
 
@@ -19,72 +15,25 @@ export class ManipulationController {
     const actions = this.generateRandomActions(
       this.options.randomiseActionsCount
     );
-    const distances = [];
-    for (const [key, action] of actions) {
-      console.log(key);
-      await action();
-      distances.push(
-        Node.distanceToCompletion(new Node(this.cubeRube.cubiesLocated, 0))
-      );
+    for (const action of actions) {
+      await this.makeAction(action);
     }
-    console.log(distances);
   }
-  // public isComplete() {
-  //   const colors = [
-  //     ...new Set(
-  //       this.cubeRube.cubiesLocated.map(({ meta: meta }) => meta.colors).flat(1)
-  //     ),
-  //   ].every(color => {
-  //     const colorsCoords = this.cubeRube.cubiesLocated
-  //       .filter(({ meta: meta }) => meta.colors.includes(color))
-  //       .map(({ meta: meta }) => meta.coords);
-  //     const coordsSetByAxis = new Map<EAxis, Set<number>>([
-  //       [EAxis.x, new Set(colorsCoords.map(({ x }) => x))],
-  //       [EAxis.y, new Set(colorsCoords.map(({ y }) => y))],
-  //       [EAxis.z, new Set(colorsCoords.map(({ z }) => z))],
-  //     ]);
 
-  //     // intersection
-  //     return (
-  //       [...coordsSetByAxis.get(EAxis.x)]
-  //         .filter(el => coordsSetByAxis.get(EAxis.y).has(el))
-  //         .filter(el => coordsSetByAxis.get(EAxis.z).has(el)).length === 1
-  //     );
-  //   });
-  //   return colors;
-  // }
-
-  private getActions() {
-    const nList: number[] = new Array(NUMBER_OF_CUBIES)
-      .fill(null)
-      .map((_, index) => index);
-
-    const actions: IActions = {};
-
-    for (const [, axis] of Object.entries(EAxis)) {
-      for (const angle of this.options.angleList) {
-        for (const index of nList) {
-          actions[`${axis}{${index}} ${angle}`] = () =>
-            this.cubeRube.startAnimation(
-              angle,
-              axis,
-              index - Math.floor(NUMBER_OF_CUBIES / 2)
-            );
-        }
-      }
-    }
-    return actions;
+  public makeAction(action: EAction) {
+    const params = ActionParamsMapping.get(action);
+    return this.cubeRube.startAnimation(
+      params.angle,
+      params.axis,
+      params.slice
+    );
   }
-  private generateRandomActions(
-    count: number
-  ): Array<[string, () => Promise<void>]> {
-    const possibleActions = this.getActions();
+
+  private generateRandomActions(count: number): EAction[] {
+    const possibleActions = Object.keys(EAction) as EAction[];
     const randNumber = () =>
-      Math.round(Math.random() * (Object.keys(possibleActions).length - 1));
+      Math.round(Math.random() * (possibleActions.length - 1));
 
-    return new Array(count)
-      .fill(null)
-      .map(() => Object.keys(possibleActions)[randNumber()])
-      .map((key) => [key, possibleActions[key]]);
+    return new Array(count).fill(null).map(() => possibleActions[randNumber()]);
   }
 }
