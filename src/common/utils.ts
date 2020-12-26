@@ -2,7 +2,7 @@ import { Vector3 } from 'three';
 import {
   CUBE_FACE_EDGE_TYPE_MAP,
   EAxis,
-  ECubeFace,
+  ECubeFaceOrActions,
   EEdgeType,
 } from './CommonConstants';
 import { IAxisEdgeMap } from './CommonTypes';
@@ -31,7 +31,7 @@ export const getCubeFace = (axis: EAxis, edgeType: EEdgeType) => {
     ([_, { axis: mapAxis, edgeType: mapEdgeType }]) =>
       mapAxis === axis && mapEdgeType === edgeType
   );
-  return face as ECubeFace;
+  return face as ECubeFaceOrActions;
 };
 
 export const getFaces = (vector: Vector3, n: number) => {

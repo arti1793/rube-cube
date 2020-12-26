@@ -3,7 +3,7 @@ import {
   AXIS_EDGE_CUBE_SIDE_MAP,
   EAxis,
   EColor,
-  ECubeFace,
+  ECubeFaceOrActions,
 } from '../common/CommonConstants';
 import { IAxisEdgeMap } from '../common/CommonTypes';
 import { getAxisEdgeMap, getCubeFace } from '../common/utils';
@@ -14,7 +14,7 @@ import { CubieSide } from './CubieSide/CubieSide';
 export type TCubieFactory = (
   coords: { xIndex: number; yIndex: number; zIndex: number },
   n: number,
-  cubeFaceColorMap: Map<ECubeFace, EColor>
+  cubeFaceColorMap: Map<ECubeFaceOrActions, EColor>
 ) => Cubie;
 
 export const CubieFactory: TCubieFactory = (

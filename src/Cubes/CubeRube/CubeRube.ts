@@ -1,5 +1,5 @@
 import { Group, MathUtils, Mesh, Scene } from 'three';
-import { EAxis, ECubeFace } from '../../common/CommonConstants';
+import { EAxis, ECubeFaceOrActions } from '../../common/CommonConstants';
 import { ISceneAttachable } from '../../common/CommonTypes';
 import { Cubie } from '../Cubie/Cubie';
 import { TopologyGenerator } from '../TopologyGenerator';
@@ -33,7 +33,7 @@ export class CubeRube implements ISceneAttachable {
   }
 
   public showCubeMeta() {
-    const info = Object.entries(ECubeFace)
+    const info = Object.entries(ECubeFaceOrActions)
       .map(([face]) => ({
         [face]: new Set(
           this.cubiesLocated

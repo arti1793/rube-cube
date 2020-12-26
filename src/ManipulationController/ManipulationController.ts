@@ -1,6 +1,6 @@
 import {
   ActionParamsMapping,
-  ECubeFace
+  ECubeFaceOrActions
 } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 
@@ -22,37 +22,37 @@ export class ManipulationController {
     }
   }
   public async deterministicShuffle() {
-    const actions: ECubeFace[] = [
-      ECubeFace.Lr,
-      ECubeFace.D,
-      ECubeFace.F,
-      ECubeFace.R,
-      ECubeFace.D,
-      ECubeFace.Fr,
-      ECubeFace.B,
-      ECubeFace.Lr,
-      ECubeFace.Fr,
-      ECubeFace.Ur,
-      ECubeFace.L,
-      ECubeFace.Rr,
-      ECubeFace.F,
-      ECubeFace.Fr,
-      ECubeFace.Fr,
-      ECubeFace.B,
-      ECubeFace.R,
-      ECubeFace.B,
-      ECubeFace.B,
-      ECubeFace.Lr,
-      ECubeFace.F,
-      ECubeFace.B,
-      ECubeFace.Lr,
-      ECubeFace.B,
-      ECubeFace.R,
-      ECubeFace.B,
-      ECubeFace.B,
-      ECubeFace.Fr,
-      ECubeFace.Ur,
-      ECubeFace.D
+    const actions: ECubeFaceOrActions[] = [
+      ECubeFaceOrActions.Lr,
+      ECubeFaceOrActions.D,
+      ECubeFaceOrActions.F,
+      ECubeFaceOrActions.R,
+      ECubeFaceOrActions.D,
+      ECubeFaceOrActions.Fr,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.Lr,
+      ECubeFaceOrActions.Fr,
+      ECubeFaceOrActions.Ur,
+      ECubeFaceOrActions.L,
+      ECubeFaceOrActions.Rr,
+      ECubeFaceOrActions.F,
+      ECubeFaceOrActions.Fr,
+      ECubeFaceOrActions.Fr,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.R,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.Lr,
+      ECubeFaceOrActions.F,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.Lr,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.R,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.B,
+      ECubeFaceOrActions.Fr,
+      ECubeFaceOrActions.Ur,
+      ECubeFaceOrActions.D
 
     ]
     for (const action of actions) {
@@ -60,7 +60,7 @@ export class ManipulationController {
     }
   }
 
-  public makeAction(action: ECubeFace, fast = false) {
+  public makeAction(action: ECubeFaceOrActions, fast = false) {
     const params = ActionParamsMapping.get(action);
     return this.cubeRube.startAnimation(
       params.angle,
@@ -70,8 +70,8 @@ export class ManipulationController {
     );
   }
 
-  private generateRandomActions(count: number): ECubeFace[] {
-    const possibleActions = Object.keys(ECubeFace) as ECubeFace[];
+  private generateRandomActions(count: number): ECubeFaceOrActions[] {
+    const possibleActions = Object.keys(ECubeFaceOrActions) as ECubeFaceOrActions[];
     const randNumber = () =>
       Math.round(Math.random() * (possibleActions.length - 1));
 

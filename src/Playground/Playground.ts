@@ -8,13 +8,11 @@ import {
 } from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import {
-  EColor,
-  ECubeFace,
+  ECubeFaceOrActions,
   NUMBER_OF_CUBIES,
 } from '../common/CommonConstants';
 import { CubeRube } from '../Cubes/CubeRube/CubeRube';
 import { ManipulationController } from '../ManipulationController/ManipulationController';
-import { Algorithm } from '../algorithm/algorithm';
 
 export class Playground {
   public scene = new Scene();
@@ -24,7 +22,7 @@ export class Playground {
     100,
     100000
   );
-  public renderer = new WebGLRenderer();
+  public renderer = new WebGLRenderer({alpha: true});
 
   public controls = new OrbitControls(this.camera, this.renderer.domElement);
 
@@ -32,7 +30,6 @@ export class Playground {
 
   public cubeRube = new CubeRube(NUMBER_OF_CUBIES);
   public manipulationController = new ManipulationController(this.cubeRube);
-  public algorithm = new Algorithm(this.cubeRube);
 
   private fpsInterval = 15;
 
@@ -47,6 +44,7 @@ export class Playground {
 
     /** viewport sizes */
     this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setClearColor(new Color(0, 0, 0), 0);
     this.setCameraPosition();
     this.setEnvironment();
     this.setLight();
@@ -59,39 +57,36 @@ export class Playground {
     this.scene.autoUpdate = true;
     this.cubeRube.connectTo(this.scene);
     this.scene.add(this.axisHelper);
-    this.scene.background = new Color(EColor.white);
 
     this.startAnimating(this.fps);
-    this.manipulationController.deterministicShuffle();
   }
 
+/**
+ * TODO: remove
+ */
   public renderButtons = () => {
 
     const wrapper = document.createElement('div');
     wrapper.style.position = 'fixed';
     wrapper.style.bottom = '0';
 
-    for (const action of Object.keys(ECubeFace)) {
+    for (const action of Object.keys(ECubeFaceOrActions)) {
       const button = document.createElement('button');
       button.textContent = action;
       button.style.width = '100px';
       button.style.height = '50px';
       button.onclick = () => {
-        this.manipulationController.makeAction(action as ECubeFace)
+        this.manipulationController.makeAction(action as ECubeFaceOrActions)
       };
       wrapper.append(button);
     }
+    
     const randomiseButton = document.createElement('button');
     randomiseButton.textContent = 'randomise';
     randomiseButton.style.width = '100px';
     randomiseButton.style.height = '50px';
     randomiseButton.onclick = () => this.manipulationController.randomise();
-    const solveButton = document.createElement('button');
-    solveButton.textContent = 'solveButton';
-    solveButton.style.width = '100px';
-    solveButton.style.height = '50px';
-    solveButton.onclick = () => this.algorithm.start();
-    wrapper.append(solveButton);
+
     document.body.append(wrapper);
   };
 

@@ -1,13 +1,13 @@
 import { Matrix4 } from 'three';
-import { EColor, ECubeFace, ECubieSide } from '../../common/CommonConstants';
+import { EColor, ECubeFaceOrActions, ECubieSide } from '../../common/CommonConstants';
 import { CubieSide } from './CubieSide';
 
 test('cubieside. should create', () => {
-  const cubieSide = new CubieSide(EColor.blue, ECubieSide.top, ECubeFace.front);
+  const cubieSide = new CubieSide(EColor.blue, ECubieSide.top, ECubeFaceOrActions.F);
   expect(cubieSide).toBeInstanceOf(CubieSide);
 });
 test('cubieside. should rotate +90', () => {
-  const cubieSide = new CubieSide(EColor.red, ECubieSide.top, ECubeFace.top);
+  const cubieSide = new CubieSide(EColor.red, ECubieSide.top, ECubeFaceOrActions.U);
 
   const matrix = new Matrix4();
   // by x +90
@@ -32,12 +32,12 @@ test('cubieside. should rotate +90', () => {
   const newCubieSide = cubieSide.rotate(matrix);
 
   expect(newCubieSide.color).toBe(EColor.red);
-  expect(newCubieSide.face).toBe(ECubeFace.front);
+  expect(newCubieSide.face).toBe(ECubeFaceOrActions.F);
   expect(newCubieSide.side).toBe(ECubieSide.front);
 });
 
 test('cubieside. should rotate -90', () => {
-  const cubieSide = new CubieSide(EColor.red, ECubieSide.top, ECubeFace.top);
+  const cubieSide = new CubieSide(EColor.red, ECubieSide.top, ECubeFaceOrActions.U);
 
   const matrix = new Matrix4();
   // by x -90
@@ -62,6 +62,6 @@ test('cubieside. should rotate -90', () => {
   const newCubieSide = cubieSide.rotate(matrix);
 
   expect(newCubieSide.color).toBe(EColor.red);
-  expect(newCubieSide.face).toBe(ECubeFace.back);
+  expect(newCubieSide.face).toBe(ECubeFaceOrActions.B);
   expect(newCubieSide.side).toBe(ECubieSide.back);
 });

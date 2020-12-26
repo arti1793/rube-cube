@@ -1,6 +1,6 @@
 import { Group, Mesh, Scene, Vector3 } from 'three';
 import { CubieSide } from '../Cubes/CubieSide/CubieSide';
-import { EAxis, EColor, ECubeFace, EEdgeType } from './CommonConstants';
+import { EAxis, EColor, ECubeFaceOrActions, EEdgeType } from './CommonConstants';
 
 export interface IAxisEdgeMap {
   [EAxis.x]: EEdgeType;
@@ -20,6 +20,6 @@ export interface ISceneAttachable {
 }
 
 export interface IColorCubeFace {
-  face: ECubeFace;
+  face: ECubeFaceOrActions;
   color: EColor;
 }

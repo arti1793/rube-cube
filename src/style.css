@@ -1,0 +1,29 @@
+.cube-rube {
+    height: 100vh;
+}
+
+
+body {
+    background: linear-gradient(117deg, #22aadd, #2260dd);
+    background-size: 400% 400%;
+
+    -webkit-animation: asdf 55s ease infinite;
+    -moz-animation: asdf 55s ease infinite;
+    animation: asdf 55s ease infinite;
+}
+
+@-webkit-keyframes asdf {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 51%}
+    100%{background-position:0% 50%}
+}
+@-moz-keyframes asdf {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 51%}
+    100%{background-position:0% 50%}
+}
+@keyframes asdf {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 51%}
+    100%{background-position:0% 50%}
+}

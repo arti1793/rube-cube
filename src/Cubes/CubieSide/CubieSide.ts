@@ -1,5 +1,5 @@
 import { Matrix4, Vector3 } from 'three';
-import { EColor, ECubeFace, ECubieSide } from '../../common/CommonConstants';
+import { EColor, ECubeFaceOrActions, ECubieSide } from '../../common/CommonConstants';
 
 const SideVectorMap: Map<ECubieSide, Vector3> = new Map([
   [ECubieSide.top, new Vector3(0, 1, 0)],
@@ -10,24 +10,24 @@ const SideVectorMap: Map<ECubieSide, Vector3> = new Map([
   [ECubieSide.back, new Vector3(0, 0, -1)],
 ]);
 
-const CubeFaceVectorMap: Map<ECubeFace, Vector3> = new Map([
-  [ECubeFace.U, new Vector3(0, 1, 0)],
-  [ECubeFace.D, new Vector3(0, -1, 0)],
-  [ECubeFace.L, new Vector3(-1, 0, 0)],
-  [ECubeFace.R, new Vector3(1, 0, 0)],
-  [ECubeFace.F, new Vector3(0, 0, 1)],
-  [ECubeFace.B, new Vector3(0, 0, -1)],
+const CubeFaceVectorMap: Map<ECubeFaceOrActions, Vector3> = new Map([
+  [ECubeFaceOrActions.U, new Vector3(0, 1, 0)],
+  [ECubeFaceOrActions.D, new Vector3(0, -1, 0)],
+  [ECubeFaceOrActions.L, new Vector3(-1, 0, 0)],
+  [ECubeFaceOrActions.R, new Vector3(1, 0, 0)],
+  [ECubeFaceOrActions.F, new Vector3(0, 0, 1)],
+  [ECubeFaceOrActions.B, new Vector3(0, 0, -1)],
 ]);
 
 /**
- * Cubieside. stores face of cube, cubie side and color. face of cube and cubie side are actialising by "rotate()" method
+ * Cubieside. stores face of cube, cubie side and color. face of cube and cubie side are actualising by "rotate()" method
  */
 export class CubieSide {
   public readonly color: EColor;
   public side: ECubieSide;
-  public face: ECubeFace;
+  public face: ECubeFaceOrActions;
 
-  constructor(color: EColor, side: ECubieSide, face: ECubeFace) {
+  constructor(color: EColor, side: ECubieSide, face: ECubeFaceOrActions) {
     this.color = color;
     this.side = side;
     this.face = face;

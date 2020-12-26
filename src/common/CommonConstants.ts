@@ -50,7 +50,7 @@ export const AXIS_EDGE_CUBE_SIDE_MAP = {
   },
 };
 
-export enum ECubeFace {
+export enum ECubeFaceOrActions {
   U = 'U',
   Ur = 'Ur',
   L = 'L',
@@ -66,33 +66,33 @@ export enum ECubeFace {
 }
 
 export const CUBE_FACE_EDGE_TYPE_MAP = new Map([
-  [ECubeFace.F, { axis: EAxis.z, edgeType: EEdgeType.far }],
-  [ECubeFace.R, { axis: EAxis.x, edgeType: EEdgeType.far }],
-  [ECubeFace.U, { axis: EAxis.y, edgeType: EEdgeType.far }],
-  [ECubeFace.D, { axis: EAxis.y, edgeType: EEdgeType.near }],
-  [ECubeFace.L, { axis: EAxis.x, edgeType: EEdgeType.near }],
-  [ECubeFace.B, { axis: EAxis.z, edgeType: EEdgeType.near }],
+  [ECubeFaceOrActions.F, { axis: EAxis.z, edgeType: EEdgeType.far }],
+  [ECubeFaceOrActions.R, { axis: EAxis.x, edgeType: EEdgeType.far }],
+  [ECubeFaceOrActions.U, { axis: EAxis.y, edgeType: EEdgeType.far }],
+  [ECubeFaceOrActions.D, { axis: EAxis.y, edgeType: EEdgeType.near }],
+  [ECubeFaceOrActions.L, { axis: EAxis.x, edgeType: EEdgeType.near }],
+  [ECubeFaceOrActions.B, { axis: EAxis.z, edgeType: EEdgeType.near }],
 ]);
 export const CUBE_FACE_COLOR_MAP = new Map([
-  [ECubeFace.U, EColor.white],
-  [ECubeFace.R, EColor.red],
-  [ECubeFace.F, EColor.green],
-  [ECubeFace.L, EColor.orange],
-  [ECubeFace.B, EColor.blue],
-  [ECubeFace.D, EColor.yellow],
+  [ECubeFaceOrActions.U, EColor.white],
+  [ECubeFaceOrActions.R, EColor.red],
+  [ECubeFaceOrActions.F, EColor.green],
+  [ECubeFaceOrActions.L, EColor.orange],
+  [ECubeFaceOrActions.B, EColor.blue],
+  [ECubeFaceOrActions.D, EColor.yellow],
 ]);
 
 export const ActionParamsMapping = new Map([
-  [ECubeFace.U, { axis: EAxis.y, slice: 1, angle: -90, }],
-  [ECubeFace.Ur, { axis: EAxis.y, slice: 1, angle: 90, }],
-  [ECubeFace.L, { axis: EAxis.x, slice: -1, angle: 90, }],
-  [ECubeFace.Lr, { axis: EAxis.x, slice: -1, angle: -90, }],
-  [ECubeFace.F, { axis: EAxis.z, slice: 1, angle: -90, }],
-  [ECubeFace.Fr, { axis: EAxis.z, slice: 1, angle: 90, }],
-  [ECubeFace.R, { axis: EAxis.x, slice: 1, angle: -90, }],
-  [ECubeFace.Rr, { axis: EAxis.x, slice: 1, angle: 90, }],
-  [ECubeFace.B, { axis: EAxis.z, slice: -1, angle: 90, }],
-  [ECubeFace.Br, { axis: EAxis.z, slice: -1, angle: -90, }],
-  [ECubeFace.D, { axis: EAxis.y, slice: -1, angle: 90, }],
-  [ECubeFace.Dr, { axis: EAxis.y, slice: -1, angle: -90, }],
+  [ECubeFaceOrActions.U, { axis: EAxis.y, slice: 1, angle: -90, }],
+  [ECubeFaceOrActions.Ur, { axis: EAxis.y, slice: 1, angle: 90, }],
+  [ECubeFaceOrActions.L, { axis: EAxis.x, slice: -1, angle: 90, }],
+  [ECubeFaceOrActions.Lr, { axis: EAxis.x, slice: -1, angle: -90, }],
+  [ECubeFaceOrActions.F, { axis: EAxis.z, slice: 1, angle: -90, }],
+  [ECubeFaceOrActions.Fr, { axis: EAxis.z, slice: 1, angle: 90, }],
+  [ECubeFaceOrActions.R, { axis: EAxis.x, slice: 1, angle: -90, }],
+  [ECubeFaceOrActions.Rr, { axis: EAxis.x, slice: 1, angle: 90, }],
+  [ECubeFaceOrActions.B, { axis: EAxis.z, slice: -1, angle: 90, }],
+  [ECubeFaceOrActions.Br, { axis: EAxis.z, slice: -1, angle: -90, }],
+  [ECubeFaceOrActions.D, { axis: EAxis.y, slice: -1, angle: 90, }],
+  [ECubeFaceOrActions.Dr, { axis: EAxis.y, slice: -1, angle: -90, }],
 ]);
